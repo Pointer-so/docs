@@ -1,86 +1,133 @@
 ---
-title: 'Quickstart'
-description: 'Start building awesome documentation in under 5 minutes'
+title: "Quickstart"
+description: "Get started with Pointer in under 5 minutes."
 ---
 
-## Setup your development
+## Prerequisites
 
-Learn how to update your docs locally and deploy them to the public.
+* Node.js 16.0 or later
 
-### Edit and preview
+* A React-based application
 
-<AccordionGroup>
-  <Accordion icon="github" title="Clone your docs locally">
-    During the onboarding process, we created a repository on your Github with
-    your docs content. You can find this repository on our
-    [dashboard](https://dashboard.mintlify.com). To clone the repository
-    locally, follow these
-    [instructions](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
-    in your terminal.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Preview changes">
-    Previewing helps you make sure your changes look as intended. We built a
-    command line interface to render these changes locally. 1. Install the
-    [Mintlify CLI](https://www.npmjs.com/package/mintlify) to preview the
-    documentation changes locally with this command: ``` npm i -g mintlify ```
-    2. Run the following command at the root of your documentation (where
-    `mint.json` is): ``` mintlify dev ```
-  </Accordion>
-</AccordionGroup>
+## Installation
 
-### Deploy your changes
+<Steps>
+  <Step title="Grab an API key from the Pointer dashboard.">
+    Login to the [Pointer dashboard](https://app.pointer.so), then create a project. Two keys will be automatically generated for you — a production and development key. Copy the development key and store it.
+  </Step>
 
-<AccordionGroup>
+  <Step title="Install the Pointer SDK using your preferred package manager.">
+    <CodeGroup>
+      ```bash npm
+      npm install @pointer-so/sdk
+      ```
 
-<Accordion icon="message-bot" title="Install our Github app">
-  Our Github app automatically deploys your changes to your docs site, so you
-  don't need to manage deployments yourself. You can find the link to install on
-  your [dashboard](https://dashboard.mintlify.com). Once the bot has been
-  successfully installed, there should be a check mark next to the commit hash
-  of the repo.
-</Accordion>
-<Accordion icon="rocket" title="Push your changes">
-  [Commit and push your changes to
-  Git](https://docs.github.com/en/get-started/using-git/pushing-commits-to-a-remote-repository#about-git-push)
-  for your changes to update in your docs site. If you push and don't see that
-  the Github app successfully deployed your changes, you can also manually
-  update your docs through our [dashboard](https://dashboard.mintlify.com).
-</Accordion>
+      ```bash pnpm
+      pnpm add @pointer-so/sdk
+      ```
 
-</AccordionGroup>
+      ```bash yarn
+      yarn add @pointer-so/sdk
+      ```
+    </CodeGroup>
 
-## Update your docs
 
-Add content directly in your files with MDX syntax and React components. You can use any of our components, or even build your own.
+  </Step>
 
-<CardGroup>
+  <Step title="Configure your environment variables.">
+    Add the Pointer API key into your `.env` file.
 
-<Card title="Style Your Docs" icon="paintbrush" href="/settings/global">
-  Add flair to your docs with personalized branding.
-</Card>
+    ```bash
+    POINTER_API_KEY=pt_dev_*********************
+    ```
+  </Step>
 
-<Card
-  title="Add API Endpoints"
-  icon="square-code"
-  href="/api-playground/configuration"
->
-  Implement your OpenAPI spec and enable API user interaction.
-</Card>
+  <Step title="Wrap your app with the PointerProvider.">
+    In your client-side root file, (e.g., `layout.tsx`, `index.tsx`, `_app.tsx`) wrap your app with the `PointerProvider`.
 
-<Card
-  title="Integrate Analytics"
-  icon="chart-mixed"
-  href="/analytics/supported-integrations"
->
-  Draw insights from user interactions with your documentation.
-</Card>
+    ```typescript
+    import { PointerProvider } from '@pointer-so/sdk';
 
-<Card
-  title="Host on a Custom Domain"
-  icon="browser"
-  href="/settings/custom-domain/subdomain"
->
-  Keep your docs on your own website's subdomain.
-</Card>
+    function App() {
+      return (
+        <PointerProvider apiKey={POINTER_API_KEY}>
+          <YourApp />
+        </PointerProvider>
+      );
+    }
+    ```
+  </Step>
 
-</CardGroup>
+  <Step title="Test the integration.">
+    The Pointer widget should now appear in the bottom-right corner of your app. Head to the ['Developers' page](https://app.pointer.so/developers) in the dashboard and click "Verify connection" to ensure everything is working correctly.
+  </Step>
+</Steps>
+
+## Framework-specific setup
+
+<Note>
+  Pointer currently works with any React-based application. Support for Vue, Svelte, and other frontend frameworks is in development.
+</Note>
+
+### Next.js
+
+If using the `app` router:
+
+```typescript app/layout.tsx
+import { PointerProvider } from '@pointer-so/sdk';
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html>
+      <body>
+        <PointerProvider 
+          apiKey={process.env.NEXT_PUBLIC_POINTER_API_KEY!}
+        >
+          {children}
+        </PointerProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+If using the `pages` router:
+
+```typescript pages/_app.tsx
+import { PointerProvider } from '@pointer-so/sdk';
+import type { AppProps } from 'next/app';
+
+export default function App({ Component, pageProps }: AppProps) {
+  return (
+    <PointerProvider 
+      apiKey={process.env.NEXT_PUBLIC_POINTER_API_KEY!}
+    >
+      <Component {...pageProps} />
+    </PointerProvider>
+  );
+}
+```
+
+### Remix
+
+```typescript app/root.tsx
+import { PointerProvider } from '@pointer-so/sdk';
+
+export default function App() {
+  return (
+    <html>
+      <body>
+        <PointerProvider 
+          apiKey={process.env.POINTER_API_KEY!}
+        >
+          <Outlet />
+        </PointerProvider>
+      </body>
+    </html>
+  );
+}
+```
