@@ -44,11 +44,11 @@
   ],
   "navigation": [
     {
-      "group": "Get Started",
+      "group": "Overview",
       "pages": [
         "introduction",
         "quickstart",
-        "development"
+        "roadmap"
       ]
     },
     {
