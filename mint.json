@@ -8,7 +8,7 @@
  "favicon": "/favicon.svg",
  "colors": {
   "primary": "#111827",
-  "light": "#F1F5F9",  // slate-100
+  "light": "#F1F5F9",
   "dark": "#111827",
   "anchors": {
     "from": "#111827", 
