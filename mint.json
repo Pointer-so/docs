@@ -1,71 +1,66 @@
 {
- "$schema": "https://mintlify.com/schema.json",
- "name": "Pointer", 
- "logo": {
-   "dark": "/logo/dark.svg",
-   "light": "/logo/light.svg"
- },
- "favicon": "/favicon.svg",
- "colors": {
-  "primary": "#111827",
-  "light": "#F1F5F9",
-  "dark": "#111827",
-  "anchors": {
-    "from": "#111827", 
-    "to": "#202834"
-  }
- },
-  "topbarLinks": [
-    {
-      "name": "Support",
-      "url": "mailto:hi@mintlify.com"
-    }
-  ],
-  "topbarCtaButton": {
-    "name": "Dashboard",
-    "url": "https://dashboard.mintlify.com"
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Pointer", 
+  "logo": {
+    "dark": "/logo/dark.svg",
+    "light": "/logo/light.svg"
   },
-  "anchors": [
-    {
-      "name": "Documentation",
-      "icon": "book-open-cover",
-      "url": "https://mintlify.com/docs"
-    },
-    {
-      "name": "Community",
-      "icon": "slack",
-      "url": "https://mintlify.com/community"
-    },
-    {
-      "name": "Blog",
-      "icon": "newspaper",
-      "url": "https://mintlify.com/blog"
-    }
-  ],
-  "navigation": [
-    {
-      "group": "Overview",
-      "pages": [
-        "introduction",
-        "quickstart",
-        "roadmap"
-      ]
-    },
-    {
-      "group": "Essentials",
-      "pages": [
-        "essentials/markdown",
-        "essentials/code",
-        "essentials/images",
-        "essentials/settings",
-        "essentials/navigation",
-        "essentials/reusable-snippets"
-      ]
-    }
-  ],
-  "footerSocials": {
-    "x": "https://x.com/mintlify",
-    "github": "https://github.com/mintlify",
-    "linkedin": "https://www.linkedin.com/company/mintsearch"
-  }
-}
+  "favicon": "/favicon.svg",
+  "colors": {
+   "primary": "#111827",
+   "light": "#F1F5F9",
+   "dark": "#111827",
+   "anchors": {
+     "from": "#111827", 
+     "to": "#202834"
+   }
+  },
+   "topbarLinks": [
+     {
+       "name": "Support",
+       "url": "mailto:team@pointer.so"
+     }
+   ],
+   "topbarCtaButton": {
+     "name": "Dashboard",
+     "url": "https://app.pointer.so"
+   },
+   "anchors": [
+     {
+       "name": "Community",
+       "icon": "discord",
+       "url": "https://dub.sh/pointer-community"
+     }
+   ],
+   "navigation": [
+     {
+       "group": "Overview",
+       "pages": [
+         "introduction",
+         "quickstart",
+         "roadmap"
+       ]
+     },
+     {
+       "group": "Widget",
+       "pages": [
+         "widget/guides",
+         "widget/chat",
+         "widget/customization"
+       ]
+     },
+     {
+       "group": "Analytics",
+       "pages": [
+         "analytics/guides",
+         "analytics/faqs",
+         "analytics/feedback"
+       ]
+     }
+   ],
+   "footerSocials": {
+     "x": "https://x.com/pointer_so",
+     "github": "https://github.com/pointer-so",
+     "linkedin": "https://www.linkedin.com/company/pointer-so"
+   }
+ }
