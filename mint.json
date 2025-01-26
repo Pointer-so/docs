@@ -64,6 +64,14 @@
         "knowledge/files",
         "knowledge/integrations"
       ]
+    },
+    {
+      "group": "FAQs",
+      "pages": [
+        "faqs/pricing",
+        "faqs/features",
+        "faqs/contact-us"
+      ]
     }
    ],
    "footerSocials": {
