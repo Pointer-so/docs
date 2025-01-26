@@ -1,0 +1,100 @@
+---
+title: "Customization"
+description: "Learn how to customize your widget (coming soon)."
+---
+
+## Overview
+
+Pointer's UI is fully customizable through our web editor or programmatically via code. Match your brand colors, typography, and design system with minimal effort.
+
+<Note>
+  Note that these customization features are coming soon, and are not yet available in the current version. Info on this page is subject to change.&#x20;
+</Note>
+
+## Web editor
+
+Customize every visual aspect of Pointer directly in our dashboard. Changes sync immediately to your widget.
+
+```typescript
+interface Theme {
+ colors: {
+   primary: string    // Brand color
+   background: string // Widget background
+   text: string      // Text color
+   border: string    // Border color
+ }
+ typography: {
+   fontFamily: string
+   fontSize: string
+   lineHeight: string
+ }
+ borderRadius: string
+ spacing: {
+   padding: string
+   gap: string
+ }
+}
+```
+
+## Code
+
+Customize styles programmatically through the `PointerProvider` in your app.
+
+```typescript
+<PointerProvider
+  theme={{
+    colors: {
+      primary: '#0070f3',
+      background: '#ffffff',
+      text: '#000000',
+      border: '#eaeaea'
+    },
+    typography: {
+      fontFamily: 'Inter, sans-serif',
+      fontSize: '14px',
+      lineHeight: '1.5'
+    },
+    borderRadius: '8px',
+    spacing: {
+      padding: '16px',
+      gap: '8px'
+    }
+  }}
+>
+```
+
+Style individual components for even more control:
+
+```typescript
+<PointerProvider
+  components={{
+    Chat: {
+      Container: {
+        boxShadow: 'none',
+        border: '1px solid #eaeaea'
+      }
+    },
+    Guide: {
+      Tooltip: {
+        background: '#000000',
+        color: '#ffffff'
+      }
+    }
+  }}
+>
+```
+
+Pointer also supports dark mode out of the box. Define dark theme variants that automatically activate based on system preferences:
+
+```typescript
+<PointerProvider
+  theme={{
+    dark: {
+      colors: {
+        background: '#000000',
+        text: '#ffffff'
+      }
+    }
+  }}
+>
+```
