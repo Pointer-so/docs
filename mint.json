@@ -56,7 +56,15 @@
          "analytics/faqs",
          "analytics/feedback"
        ]
-     }
+     },
+     {
+      "group": "Knowledge",
+      "pages": [
+        "knowledge/web-content",
+        "knowledge/files",
+        "knowledge/integrations"
+      ]
+    }
    ],
    "footerSocials": {
      "x": "https://x.com/pointer_so",
