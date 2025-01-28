@@ -5,6 +5,9 @@
     "dark": "/logo/pointer-light.svg",
     "light": "/logo/pointer-dark.svg"
   },
+  "metadata": {
+    "og:image": "https://pointer.so"
+  },
   "favicon": "/favicon.svg",
   "colors": {
    "primary": "#111827",
