@@ -33,11 +33,26 @@ description: "Get started with Pointer in under 5 minutes."
   </Step>
 
   <Step title="Configure your environment variables.">
-    Add the Pointer API key into your `.env` file.
+    Add the appropriate Pointer API key into your `.env` file.
 
     ```bash
     POINTER_API_KEY=pt_dev_*********************
     ```
+
+    <Note>
+      Note that there are two types of API keys: development and production.
+        - **Development keys** (`pt_dev_*`):
+        - For local development only
+        - No origin restrictions
+        - Stricter rate limits
+      
+      - **Production keys** (`pt_live_*`):
+        - Required for deployed applications
+        - Must specify allowed origin domains
+        - Domains must be valid (e.g., example.com)
+      
+      API keys are only shown in full during creation. After that, only the last 4 characters will be visible.
+    </Note>
   </Step>
 
   <Step title="Wrap your app with the PointerProvider.">
