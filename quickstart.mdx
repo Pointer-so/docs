@@ -19,15 +19,15 @@ description: "Get started with Pointer in under 5 minutes."
   <Step title="Install the Pointer SDK using your preferred package manager.">
     <CodeGroup>
       ```bash npm
-      npm install @pointer-so/sdk
+      npm install @pointer-sdk
       ```
 
       ```bash pnpm
-      pnpm add @pointer-so/sdk
+      pnpm add @pointer-sdk
       ```
 
       ```bash yarn
-      yarn add @pointer-so/sdk
+      yarn add @pointer-sdk
       ```
     </CodeGroup>
   </Step>
@@ -59,7 +59,7 @@ description: "Get started with Pointer in under 5 minutes."
     In your client-side root file, (e.g., `layout.tsx`, `index.tsx`, `_app.tsx`) wrap your app with the `PointerProvider`.
 
     ```typescript
-    import { PointerProvider } from '@pointer-so/sdk';
+    import { PointerProvider } from '@pointer-sdk';
 
     function App() {
       return (
@@ -87,7 +87,7 @@ description: "Get started with Pointer in under 5 minutes."
 If using the `app` router:
 
 ```typescript app/layout.tsx
-import { PointerProvider } from '@pointer-so/sdk';
+import { PointerProvider } from '@pointer-sdk';
 
 export default function RootLayout({
   children,
@@ -111,7 +111,7 @@ export default function RootLayout({
 If using the `pages` router:
 
 ```typescript pages/_app.tsx
-import { PointerProvider } from '@pointer-so/sdk';
+import { PointerProvider } from '@pointer-sdk';
 import type { AppProps } from 'next/app';
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -128,7 +128,7 @@ export default function App({ Component, pageProps }: AppProps) {
 ### Remix
 
 ```typescript app/root.tsx
-import { PointerProvider } from '@pointer-so/sdk';
+import { PointerProvider } from '@pointer-sdk';
 
 export default function App() {
   return (
