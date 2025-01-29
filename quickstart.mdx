@@ -63,12 +63,20 @@ description: "Get started with Pointer in under 5 minutes."
 
     function App() {
       return (
-        <PointerProvider apiKey={POINTER_API_KEY}>
-          <YourApp />
-        </PointerProvider>
+        <React.Fragment> //optional
+          <PointerProvider apiKey={POINTER_API_KEY}>
+            {children}
+          </PointerProvider>
+        </React.Fragment>
       );
     }
     ```
+
+    <Note>
+      For optimal performance and type safety, we recommend:
+      1. Using `React.Fragment` to ensure proper typing of child components
+      2. Placing the `PointerProvider` as close as possible to its child components to reduce the React component tree traversal
+    </Note>
   </Step>
 
   <Step title="Test the integration.">
