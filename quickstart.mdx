@@ -80,6 +80,18 @@ description: "Get started with Pointer in under 5 minutes."
   </Step>
 </Steps>
 
+## Provider customization
+
+There are two props you can pass to the `PointerProvider`:
+
+1. `disabled?`: A boolean that enables/disables the Pointer widget (optional).
+2. `apiUrl?`: A string that specifies the API URL to use (optional).
+
+<Note>
+  Note that the `apiUrl` will only work if you're using `api.pointer.so`. This prop exists as we will eventually transition to open-source. By default, you should not set this prop.
+</Note>
+
+
 ## Framework-specific setup
 
 <Note>
@@ -101,9 +113,7 @@ export default function RootLayout({
   return (
     <html>
       <body>
-        <PointerProvider 
-          apiKey={process.env.NEXT_PUBLIC_POINTER_API_KEY!}
-        >
+        <PointerProvider apiKey={process.env.NEXT_PUBLIC_POINTER_API_KEY!}>
           {children}
         </PointerProvider>
       </body>
@@ -120,9 +130,7 @@ import type { AppProps } from 'next/app';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <PointerProvider 
-      apiKey={process.env.NEXT_PUBLIC_POINTER_API_KEY!}
-    >
+    <PointerProvider apiKey={process.env.NEXT_PUBLIC_POINTER_API_KEY!}>
       <Component {...pageProps} />
     </PointerProvider>
   );
@@ -138,9 +146,7 @@ export default function App() {
   return (
     <html>
       <body>
-        <PointerProvider 
-          apiKey={process.env.POINTER_API_KEY!}
-        >
+        <PointerProvider apiKey={process.env.POINTER_API_KEY!}>
           <Outlet />
         </PointerProvider>
       </body>
