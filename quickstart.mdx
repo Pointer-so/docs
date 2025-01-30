@@ -56,7 +56,7 @@ description: "Get started with Pointer in under 5 minutes."
   </Step>
 
   <Step title="Wrap your app with the PointerProvider.">
-    In your client-side root file, (e.g., `layout.tsx`, `index.tsx`, `_app.tsx`) wrap your app with the `PointerProvider`.
+    In your root file, (e.g., `layout.tsx`, `index.tsx`, `_app.tsx`) wrap your app with the `PointerProvider`.
 
     ```typescript
     import { PointerProvider } from 'pointer-sdk';
@@ -64,17 +64,13 @@ description: "Get started with Pointer in under 5 minutes."
     function App() {
       return (
           <PointerProvider apiKey={process.env.POINTER_API_KEY!}>
-            <React.Fragment> //optional, see tip below
-              {children}
-            </React.Fragment>
+            {children}
           </PointerProvider>
       );
     }
     ```
 
     <Tip>
-      If you are having type issues, try using `React.Fragment` to ensure proper typing of child components.
-
       For optimal performance, place the `PointerProvider` as close as possible to its child components.
     </Tip>
   </Step>
