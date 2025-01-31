@@ -1,100 +1,99 @@
 ---
 title: "Customization"
-description: "Learn how to customize your widget (coming soon)."
+description: "Learn how to customize your widget's appearance and content."
 ---
 
 ## Overview
 
-Pointer's UI is fully customizable through our web editor or programmatically via code. Match your brand colors, typography, and design system with minimal effort.
+Pointer's UI is fully customizable through the `PointerProvider` component. You can customize the theme colors, branding elements, and content to match your application's design system.
 
-<Note>
-  Note that these customization features are coming soon, and are not yet available in the current version. Info on this page is subject to change.&#x20;
-</Note>
+## Theme Customization
 
-## Web editor
-
-Customize every visual aspect of Pointer directly in our dashboard. Changes sync immediately to your widget.
-
-```typescript
-interface Theme {
- colors: {
-   primary: string    // Brand color
-   background: string // Widget background
-   text: string      // Text color
-   border: string    // Border color
- }
- typography: {
-   fontFamily: string
-   fontSize: string
-   lineHeight: string
- }
- borderRadius: string
- spacing: {
-   padding: string
-   gap: string
- }
-}
-```
-
-## Code
-
-Customize styles programmatically through the `PointerProvider` in your app.
+Customize the visual appearance of the widget by configuring colors and styling:
 
 ```typescript
 <PointerProvider
-  theme={{
-    colors: {
-      primary: '#0070f3',
-      background: '#ffffff',
-      text: '#000000',
-      border: '#eaeaea'
-    },
-    typography: {
-      fontFamily: 'Inter, sans-serif',
-      fontSize: '14px',
-      lineHeight: '1.5'
-    },
-    borderRadius: '8px',
-    spacing: {
-      padding: '16px',
-      gap: '8px'
-    }
-  }}
+  // Theme colors
+  primaryColor="#111827"    // Primary text and headings
+  secondaryColor="#6B7280"  // Secondary text
+  tertiaryColor="#f5f5f5"   // Tertiary elements
+  accentColor="#6366f1"     // Interactive elements
+  backgroundColor="#ffffff" // Widget background
+  borderColor="#e4e4e7"    // Border color
+  borderRadius="12px"      // Border radius for components
 >
 ```
 
-Style individual components for even more control:
+## Branding
+
+Customize branding elements to match your company's identity:
 
 ```typescript
 <PointerProvider
-  components={{
-    Chat: {
-      Container: {
-        boxShadow: 'none',
-        border: '1px solid #eaeaea'
-      }
-    },
-    Guide: {
-      Tooltip: {
-        background: '#000000',
-        color: '#ffffff'
-      }
-    }
-  }}
+  // Branding
+  logomark="https://your-company.com/logo.png"  // Your company logo
+  avatars={[                                    // Avatars (founders, customer support team, etc.)
+    "https://your-company.com/avatar1.png",
+    "https://your-company.com/avatar2.png"
+  ]}
+  triggerIcon="sparkles"                       // Widget trigger icon (sparkles, help, message, zap)
 >
 ```
 
-Pointer also supports dark mode out of the box. Define dark theme variants that automatically activate based on system preferences:
+The `triggerIcon` can be one of: `'sparkles'`, `'help'`, `'message'`, or `'zap'`.
+
+## Content
+
+Customize the widget's text content and messaging:
 
 ```typescript
 <PointerProvider
-  theme={{
-    dark: {
-      colors: {
-        background: '#000000',
-        text: '#ffffff'
-      }
-    }
-  }}
+  // Content customization
+  welcomeMessage="Hi there 👋"              // Initial greeting
+  welcomeSubheading="How can we help?"      // Greeting subtext
+  inputPlaceholder="Ask AI anything..."     // Chat input placeholder
+  suggestedItems={[                         // Suggested questions
+    "How do I integrate Pointer?",
+    "What is Pointer?",
+    "How do I change my subscription plan?"
+  ]}
 >
 ```
+
+## Complete Example
+
+Here's a complete example showing all customization options:
+
+```typescript
+<PointerProvider
+  apiKey="your-api-key"
+  // Theme
+  primaryColor="#111827"
+  secondaryColor="#6B7280"
+  tertiaryColor="#f5f5f5"
+  accentColor="#6366f1"
+  backgroundColor="#ffffff"
+  borderColor="#e4e4e7"
+  borderRadius="12px"
+  // Branding
+  logomark="https://your-company.com/logo.png"
+  avatars={[
+    "https://your-company.com/avatar1.png",
+    "https://your-company.com/avatar2.png"
+  ]}
+  triggerIcon="sparkles"
+  // Content
+  welcomeMessage="Hi there 👋"
+  welcomeSubheading="How can we help?"
+  inputPlaceholder="Ask AI anything..."
+  suggestedItems={[
+    "How do I integrate Pointer?",
+    "What is Pointer?",
+    "How do I change my subscription plan?"
+  ]}
+>
+  {/* Your app content */}
+</PointerProvider>
+```
+
+All customization properties are optional. If not provided, Pointer will use its default theme and content settings.
