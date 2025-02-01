@@ -32,18 +32,11 @@ Customize branding elements to match your company's identity:
 <PointerProvider
   // Branding
   logomark="https://your-company.com/logo.png"  // Your company logo
-  avatars={[                                    // Avatars (max 3)
-    "https://your-company.com/avatar1.png",
-    "https://your-company.com/avatar2.png",
-    "https://your-company.com/avatar3.png"
-  ]}
   triggerIcon="sparkles"                       // Widget trigger icon
 >
 ```
 
-Examples of `avatars` include headshots of your founding team, customer support team, or any other team members. We recommend using a minimum of 2 avatars, and a maximum of 3. 
-
-All `avatars` and your `logomark` should be links.
+The `logo` prop should be a link to your company's logo.
 
 The `triggerIcon` can be one of: `'sparkles'`, `'help'`, `'message'`, or `'zap'`.
 
@@ -82,10 +75,6 @@ Here's a complete example showing all customization options:
   borderRadius="12px"
   // Branding
   logomark="https://your-company.com/logo.png"
-  avatars={[
-    "https://your-company.com/avatar1.png",
-    "https://your-company.com/avatar2.png"
-  ]}
   triggerIcon="sparkles"
   // Content
   welcomeMessage="Hi there 👋"
