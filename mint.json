@@ -42,29 +42,14 @@
        ]
      },
      {
-       "group": "Widget",
+       "group": "Features",
        "pages": [
-         "widget/guides",
-         "widget/chat",
-         "widget/styling"
-       ]
+         "features/guides",
+         "features/chat",
+         "features/onboarding",
+         "features/styling"
+        ]
      },
-     {
-       "group": "Analytics",
-       "pages": [
-         "analytics/guides",
-         "analytics/faqs",
-         "analytics/feedback"
-       ]
-     },
-     {
-      "group": "Knowledge",
-      "pages": [
-        "knowledge/web-content",
-        "knowledge/files",
-        "knowledge/integrations"
-      ]
-    },
     {
       "group": "FAQs",
       "pages": [

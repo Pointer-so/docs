@@ -1,0 +1,321 @@
+---
+title: "Onboarding flows" 
+description: "Learn how to set up interactive onboarding flows."
+---
+
+## Overview
+
+Pointer's interactive onboarding workflows allow you to guide your users through your app with customizable step-by-step tours. Using our onboarding components—built with React and integrated via a Context provider—you can create multi-step guides, validate user actions, and provide an engaging introduction to your application.
+
+## Installation
+
+<Steps>
+  <Step title="Grab an API key from the Pointer dashboard.">
+    Login to the [Pointer dashboard](https://app.pointer.so), then create a project. Two keys will be automatically generated for you — a production and development key. Copy the development key and store it.
+  </Step>
+
+  <Step title="Install the Pointer SDK using your preferred package manager.">
+    <CodeGroup>
+      ```bash npm
+      npm install pointer-sdk
+      ```
+
+      ```bash pnpm
+      pnpm add pointer-sdk
+      ```
+
+      ```bash yarn
+      yarn add pointer-sdk
+      ```
+    </CodeGroup>
+  </Step>
+
+  <Step title="Configure your environment variables.">
+    Add the appropriate Pointer API key into your `.env` file.
+
+    ```bash
+    POINTER_API_KEY=pt_dev_*********************
+    ```
+
+    <Note>
+      Note that there are two types of API keys: development and production.
+      - **Development keys** (`pt_dev_*`):
+        - For local development only
+        - No origin restrictions
+        - Stricter rate limits
+      
+      - **Production keys** (`pt_live_*`):
+        - Required for deployed applications
+        - Must specify allowed origin domains
+        - Domains must be valid (e.g., example.com)
+      
+      API keys are only shown in full during creation. After that, only the last 4 characters will be visible.
+    </Note>
+  </Step>
+
+  <Step title="Wrap your app with the PointerOnboardingProvider.">
+    In your root file, (e.g., `layout.tsx`, `index.tsx`, `_app.tsx`) wrap your app with the `PointerOnboardingProvider`.
+
+    ```typescript
+    import { PointerOnboardingProvider } from 'pointer-sdk';
+
+    function App() {
+      return (
+          <PointerOnboardingProvider 
+            apiKey={process.env.POINTER_API_KEY!}
+            config={onboardingConfig} // This is the onboarding guide object
+          >
+            {children}
+          </PointerOnboardingProvider>
+      );
+    }
+    ```
+  </Step>
+</Steps>
+---
+## Create an onboarding flow
+
+The onboarding flow consists of a configuration object that defines both the welcome experience and a series of guides. Each guide can be one of two types:
+- A step-by-step walkthrough guide
+- A simple button-link guide that redirects users to external resources
+
+```typescript
+const onboardingConfig: OnboardingConfig = {
+  id: 'getting-started',
+  welcomeHeading: 'Hi there 👋',
+  welcomeSubheading: 'Welcome to Pointer.',
+  welcomeDescription: "Let's get you familiar with the core features of our platform.",
+  welcomeImage: 'your-welcome-image-url', // Optional
+  guides: [
+    // Example of a step-by-step walkthrough guide
+    {
+      id: 'create-project',
+      title: 'Create your first project',
+      description: 'Start by creating a new project to organize your work.',
+      buttonText: 'Create project',
+      page: '/', // The page where this guide should be activated
+      steps: [
+        {
+          position: 'project-name-input',
+          instructions: 'Enter a name for your project.',
+          action: { type: 'input' as const }
+        },
+        {
+          position: 'create-project-button',
+          instructions: 'Click to create your project.',
+          action: { type: 'click' as const }
+        }
+      ]
+    },
+    // Example of a button-link guide (no steps, just external link)
+    {
+      id: 'view-docs',
+      title: 'Check out our docs',
+      description: 'For more information on how to use our platform, check out our documentation.',
+      buttonText: 'View docs',
+      buttonLink: 'https://docs.example.com',
+      steps: [] // Empty array for button-link guides
+    }
+  ]
+};
+```
+
+## Guide types
+
+1. Step-by-step walkthrough guide
+
+Used for interactive tutorials within your application:
+
+```typescript
+interface WorkflowGuide {
+  id: string; // A unique identifier for the guide
+  title: string; // The title of the guide
+  description: string; // A short description of the guide
+  buttonText: string; // The text of the button that activates the guide
+  page?: string;        // The page where this guide should be activated (optional)
+  steps: OnboardingStep[]; // An array of steps that make up the guide
+}
+```
+
+The `OnboardingStep` interface is defined as follows:
+
+```typescript
+export interface OnboardingStep {
+  position: string; // ID of element to be highlighted (see instructions below)
+  instructions: string; // The instructions to be displayed to the user
+  action?: Action; // The action to be performed when the step is completed (can be `click`, `input`, `select`, `scroll`, `navigate`, etc.)
+}
+```
+
+2. Button-link guide
+
+Used for redirecting users toexternal resources or links (docs, community, etc.):
+
+```typescript
+interface WorkflowGuide {
+  id: string;
+  title: string;
+  description: string;
+  buttonText: string;
+  buttonLink: string;   // External URL to open when clicked
+  steps: [];            // Empty array
+}
+```
+
+
+## Element identification
+
+For the onboarding system to work, each element you want to highlight in your steps must have a specific ID attribute in your HTML/JSX. This is crucial for the system to locate and highlight the correct elements.
+
+<Note>
+  We have you manually ID elements because it allows you to have complete control over the onboarding experience.
+</Note>
+
+```typescript
+// In your onboarding config
+{
+  steps: [
+    {
+      position: 'profile-name-input', // This must match an element's ID
+      instructions: 'Enter your full name',
+      action: { type: 'input' as const }
+    }
+  ]
+}
+
+// In your React component
+function ProfileForm() {
+  return (
+    <div>
+      {/* The id attribute must match the position value in your step */}
+      <input 
+        id="profile-name-input"
+        type="text" 
+        placeholder="Enter your name"
+      />
+    </div>
+  );
+}
+```
+
+<Tip>
+  Best practices for element identification:
+  - Use unique IDs for each element
+  - Keep IDs concise and descriptive
+  - Use IDs that match the step position
+</Tip>
+
+## State management
+
+The onboarding system automatically manages:
+- Guide completion status
+- Current step within each guide
+- Cross-page navigation state
+- Button-link guide states (for returning users)
+
+State is persisted in localStorage using three keys:
+
+```typescript
+const WORKFLOW_STORAGE_KEY = 'pointer-workflow-{id}';      // Guide progress
+const STATE_STORAGE_KEY = 'pointer-onboarding-state-{id}'; // Overall state
+const BUTTON_LINK_STATE_KEY = 'pointer-button-link-state-{id}'; // External link state
+```
+
+## Styling
+
+You have complete control over the styling of the onboarding flow. For more information, see the [Styling](https://docs.pointer.so/features/styling) section.
+
+
+## Complete example
+
+Here's the complete onboarding flow from the [Pointer dashboard](https://app.pointer.so):
+
+```typescript
+const onboardingConfig = {
+  id: "getting-started",
+  welcomeHeading: "Hi there 👋",
+  welcomeSubheading: "Welcome to Pointer.",
+  welcomeDescription:
+    "Let's get you familiar with the core features of our platform.",
+  welcomeImage: "https://i.ibb.co/j9GdXQ3z/onboarding-guide-image.png",
+  guides: [
+    {
+      id: "integrate-pointer",
+      title: "Install Pointer to your app",
+      description: "Integrating Pointer into your app in just a few steps.",
+      buttonText: "Install Pointer",
+      page: "/developers",
+      steps: [
+        {
+          position: "package-manager-button",
+          instructions:
+            "Copy the install command to your clipboard and install Pointer in your project.",
+          action: { type: "click" as const },
+        },
+        {
+          position: "script-copy-button",
+          instructions: "Now, add the PointerProvider to your app's root file.",
+          action: { type: "click" as const },
+        },
+        {
+          position: "api-copy-button",
+          instructions: "Copy your API key and store it in a secure location.",
+          action: { type: "click" as const },
+        },
+      ],
+    },
+    {
+      id: "knowledge-base",
+      title: "Add sources",
+      description:
+        "Add sources to your knowledge base to help Pointer understand your app.",
+      buttonText: "Add sources",
+      page: "/knowledge",
+      steps: [
+        {
+          position: "add-file-button",
+          instructions: "Add a file to your knowledge base.",
+          action: { type: "click" as const },
+        },
+        {
+          position: "add-link-button",
+          instructions:
+            "Add a URL (docs, website, etc.) to your knowledge base.",
+          action: { type: "click" as const },
+        },
+      ],
+    },
+    {
+      id: "invite-team",
+      title: "Invite team members",
+      description: "Invite your team members to your project.",
+      buttonText: "Invite team",
+      page: "/settings?tab=teams",
+      steps: [
+        {
+          position: "invite-members-button",
+          instructions: "Invite your team members to your project.",
+          action: { type: "click" as const },
+        },
+      ],
+    },
+    {
+      id: "view-docs",
+      title: "View docs",
+      description: "View the docs to learn more about Pointer.",
+      buttonText: "View docs",
+      buttonLink: "https://docs.pointer.so",
+      steps: [],
+    },
+    {
+      id: "join-community",
+      title: "Join community",
+      description:
+        "Join our Discord community to get help and support from the Pointer team.",
+      buttonText: "Join community",
+      buttonLink: "https://dub.sh/pointer-community",
+      steps: [],
+    },
+  ],
+};
+```
