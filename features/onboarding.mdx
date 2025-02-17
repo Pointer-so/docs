@@ -54,7 +54,7 @@ Pointer's interactive onboarding workflows allow you to guide your users through
   </Step>
 
   <Step title="Wrap your app with the PointerOnboardingProvider.">
-    In your root file, (e.g., `layout.tsx`, `index.tsx`, `_app.tsx`) wrap your app with the `PointerOnboardingProvider`.
+    In a layout file that wraps your authenticated/protected routes (e.g., `app/authenticated/layout.tsx`, `pages/dashboard/_layout.tsx`), add the `PointerOnboardingProvider`. This ensures the onboarding flow only appears for logged-in users in the appropriate sections of your app.
 
     ```typescript
     import { PointerOnboardingProvider } from 'pointer-sdk';
