@@ -133,7 +133,7 @@ interface WorkflowGuide {
   description: string; // A short description of the guide
   buttonText: string; // The text of the button that activates the guide
   page?: string;        // The page where this guide should be activated (optional)
-  steps: OnboardingStep[]; // An array of steps that make up the guide
+  steps?: OnboardingStep[]; // An array of steps that make up the guide
 }
 ```
 
@@ -158,7 +158,7 @@ interface WorkflowGuide {
   description: string;
   buttonText: string;
   buttonLink: string;   // External URL to open when clicked
-  steps: [];            // Empty array
+  // No steps are required for button-link guides
 }
 ```
 
