@@ -5,9 +5,9 @@ description: "Get started with Pointer in under 5 minutes."
 
 ## Prerequisites
 
-* Node.js 16.0 or later
+- Node.js 16.0 or later
 
-* A React-based application (React 18+)
+- A React-based application (React 18+)
 
 ## Installation
 
@@ -30,6 +30,7 @@ description: "Get started with Pointer in under 5 minutes."
       yarn add pointer-sdk
       ```
     </CodeGroup>
+
   </Step>
 
   <Step title="Configure your environment variables.">
@@ -45,14 +46,17 @@ description: "Get started with Pointer in under 5 minutes."
         - For local development only
         - No origin restrictions
         - Stricter rate limits
-      
+
       - **Production keys** (`pt_live_*`):
         - Required for deployed applications
         - Must specify allowed origin domains
         - Domains must be valid (e.g., example.com)
-      
+
       API keys are only shown in full during creation. After that, only the last 4 characters will be visible.
+
+      API keys are public on the client-side. Further authentication occurs in the background to verify each user and prevent session hijacking. For more information, read our [Security page](https://pointer.so/security).
     </Note>
+
   </Step>
 
   <Step title="Wrap your app with the PointerProvider.">
@@ -75,6 +79,7 @@ description: "Get started with Pointer in under 5 minutes."
     <Tip>
       For optimal performance, place the `PointerProvider` as close as possible to its child components.
     </Tip>
+
   </Step>
 
   <Step title="Test the integration.">
@@ -89,7 +94,8 @@ You have complete control over the styling of the onboarding flow. For more info
 ## Framework-specific setup
 
 <Note>
-  Pointer currently works with any React-based application. Support for Vue, Svelte, and other frontend frameworks is in development.
+  Pointer currently works with any React-based application. Support for Vue,
+  Svelte, and other frontend frameworks is in development.
 </Note>
 
 ### Next.js
@@ -97,7 +103,7 @@ You have complete control over the styling of the onboarding flow. For more info
 If using the `app` router:
 
 ```typescript app/layout.tsx
-import { PointerProvider } from 'pointer-sdk';
+import { PointerProvider } from "pointer-sdk";
 
 export default function RootLayout({
   children,
@@ -119,8 +125,8 @@ export default function RootLayout({
 If using the `pages` router:
 
 ```typescript pages/_app.tsx
-import { PointerProvider } from 'pointer-sdk';
-import type { AppProps } from 'next/app';
+import { PointerProvider } from "pointer-sdk";
+import type { AppProps } from "next/app";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -134,7 +140,7 @@ export default function App({ Component, pageProps }: AppProps) {
 ### Remix
 
 ```typescript app/root.tsx
-import { PointerProvider } from 'pointer-sdk';
+import { PointerProvider } from "pointer-sdk";
 
 export default function App() {
   return (
