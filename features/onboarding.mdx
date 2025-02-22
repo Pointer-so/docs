@@ -205,6 +205,18 @@ const STATE_STORAGE_KEY = 'pointer-onboarding-state-{id}'; // Overall state
 const BUTTON_LINK_STATE_KEY = 'pointer-button-link-state-{id}'; // External link state
 ```
 
+<Note>
+  **Testing & Development**
+  
+  To re-trigger the onboarding flow during testing or development, clear the related localStorage keys:
+  ```javascript
+  localStorage.removeItem('pointer-workflow-{id}');
+  localStorage.removeItem('pointer-onboarding-state-{id}');
+  localStorage.removeItem('pointer-button-link-state-{id}');
+  ```
+  After clearing these keys, refresh the page to restart the onboarding flow.
+</Note>
+
 ## Complete example
 
 Here's the complete onboarding flow from the [Pointer dashboard](https://app.pointer.so):
