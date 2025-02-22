@@ -210,11 +210,14 @@ const BUTTON_LINK_STATE_KEY = 'pointer-button-link-state-{id}'; // External link
   
   To re-trigger the onboarding flow during testing or development, clear the related localStorage keys:
   ```javascript
+  // Replace {id} with your onboarding config ID
   localStorage.removeItem('pointer-workflow-{id}');
   localStorage.removeItem('pointer-onboarding-state-{id}');
   localStorage.removeItem('pointer-button-link-state-{id}');
   ```
-  After clearing these keys, refresh the page to restart the onboarding flow.
+  You can also simply go to Chrome DevTools, navigate to the Application tab, and clear the localStorage keys. After clearing these keys, refresh the page to restart the onboarding flow.
+
+  We are currently working on a "Dev mode" that will allow you to re-trigger the onboarding flow without clearing the localStorage keys.
 </Note>
 
 ## Complete example
