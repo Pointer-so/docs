@@ -190,6 +190,165 @@ interface WorkflowGuide {
 }
 ```
 
+## Custom validation
+
+### Overview
+
+Custom validation allows you to create sophisticated validation rules for onboarding steps beyond simple click, input, or select events. This is particularly useful when you need to:
+- Validate complex user interactions
+- Check for specific input patterns or values
+- Wait for asynchronous operations to complete
+- Implement conditional logic
+
+### Configuration
+
+Custom validation is configured through the `customValidation` property in a step's action:
+
+```typescript
+{
+type: 'custom' as const,
+customValidation: {
+  condition: () => boolean, // Required: Validation function
+  pollingInterval?: number, // Optional: Check frequency in ms
+  timeout?: number, // Optional: Maximum wait time in ms
+  onSuccess?: () => void, // Optional: Success callback
+  onError?: () => void, // Optional: Error callback
+  },  
+};
+```
+
+### Basic example
+
+Here's a simple example that validates if an input contains specific text:
+
+```typescript
+{
+  position: 'project-name-input',
+  instructions: 'Enter a project name that contains "API"',
+  action: {
+  type: 'custom',
+  customValidation: {
+    condition: () => {
+      const input = document.getElementById(
+        "project-name-input"
+      ) as HTMLInputElement;
+      return input && input.value.includes("API");
+    },
+    pollingInterval: 500, // Check every 500ms
+    timeout: 15000, // Give up after 15 seconds
+  },
+  },
+};
+```
+
+### Advanced features
+
+#### Polling interval
+The `pollingInterval` property determines how frequently the condition is checked:
+
+```typescript
+customValidation: {
+  condition: () => someAsyncCheck(),
+  pollingInterval: 1000,  // Check every second
+}
+```
+
+#### Timeout handling
+Use `timeout` to specify how long to wait before giving up:
+
+```typescript
+customValidation: {
+  condition: () => someComplexValidation(),
+  timeout: 30000,  // Give up after 30 seconds
+  onError: () => console.error('Validation timed out')
+}
+```
+
+#### Success/Error callbacks
+Handle successful or failed validations with callbacks:
+
+```typescript
+customValidation: {
+  condition: () => validateUserInput(),
+  onSuccess: () => {
+    analytics.track('onboarding_step_completed');
+    showSuccessMessage();
+  },
+  onError: () => {
+    analytics.track('onboarding_step_failed');
+    showHelpMessage();
+  }
+}
+```
+
+### Complex validation examples
+
+#### Multiple conditions
+Validate multiple conditions simultaneously:
+
+```typescript
+{
+  position: 'form-section',
+  instructions: 'Complete all required fields',
+  action: {
+    type: 'custom',
+    customValidation: {
+      condition: () => {
+        const nameInput = document.getElementById('name') as HTMLInputElement;
+        const emailInput = document.getElementById('email') as HTMLInputElement;
+        const termsCheckbox = document.getElementById('terms') as HTMLInputElement;
+        
+        return (
+          nameInput?.value.length >= 3 && // Check if name is at least 3 characters
+          emailInput?.value.includes('@') && // Check if email contains '@'
+          termsCheckbox?.checked // Check if terms checkbox is checked
+        );
+      },
+      pollingInterval: 500
+    }
+  }
+}
+```
+
+#### Asynchronous validation
+Handle async operations in your validation:
+
+```typescript
+{
+  position: 'api-key-input',
+  instructions: 'Enter a valid API key',
+  action: {
+    type: 'custom',
+    customValidation: {
+      condition: async () => {
+        const input = document.getElementById('api-key') as HTMLInputElement;
+        if (!input?.value) return false;
+        
+        try {
+          const response = await fetch('/api/validate-key', {
+            method: 'POST',
+            body: JSON.stringify({ key: input.value })
+          });
+          return response.ok;
+        } catch {
+          return false;
+        }
+      },
+      pollingInterval: 1000,
+      timeout: 30000
+    }
+  }
+}
+```
+
+### Limitations and considerations
+
+- Custom validation conditions must return a boolean value
+- Async conditions are supported but must resolve to a boolean
+- Conditions should be pure functions without side effects
+- Heavy operations in conditions may impact performance
+- Browser security restrictions apply to DOM operations
+
 ## State management
 
 The onboarding system automatically manages:
