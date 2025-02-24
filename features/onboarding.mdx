@@ -1,5 +1,5 @@
 ---
-title: "Onboarding flows" 
+title: "Onboarding flows"
 description: "Learn how to set up interactive onboarding flows."
 ---
 
@@ -30,6 +30,7 @@ Pointer's interactive onboarding workflows allow you to guide your users through
       yarn add pointer-sdk
       ```
     </CodeGroup>
+
   </Step>
 
   <Step title="Configure your environment variables.">
@@ -45,12 +46,13 @@ Pointer's interactive onboarding workflows allow you to guide your users through
         - For local development only
         - No origin restrictions
         - Stricter rate limits
-      
+
       - **Production keys** (`pt_live_*`):
         - Required for deployed applications
         - Must specify allowed origin domains
         - Domains must be valid (e.g., example.com)
     </Note>
+
   </Step>
 </Steps>
 
@@ -59,11 +61,11 @@ Pointer's interactive onboarding workflows allow you to guide your users through
 Add the `PointerOnboardingProvider` to wrap your app, typically in a layout file that contains your authenticated routes:
 
 ```typescript
-import { PointerOnboardingProvider } from 'pointer-sdk';
+import { PointerOnboardingProvider } from "pointer-sdk";
 
 function App() {
   return (
-    <PointerOnboardingProvider 
+    <PointerOnboardingProvider
       apiKey={process.env.POINTER_API_KEY!}
       config={onboardingConfig}
       //Styling options, see below
@@ -80,32 +82,32 @@ Create an onboarding configuration object that defines your welcome screen and g
 
 ```typescript
 const onboardingConfig: OnboardingConfig = {
-  id: 'getting-started',
-  welcomeHeading: 'Hi there 👋',
-  welcomeSubheading: 'Welcome to Pointer.',
+  id: "getting-started",
+  welcomeHeading: "Hi there 👋",
+  welcomeSubheading: "Welcome to Pointer.",
   welcomeDescription: "Let's get you familiar with the core features.",
-  welcomeImage: 'your-welcome-image-url', // Optional
+  welcomeImage: "your-welcome-image-url", // Optional
   guides: [
     {
-      id: 'create-project',
-      title: 'Create your first project',
-      description: 'Start by creating a new project.',
-      buttonText: 'Create project',
-      page: '/', // The page where this guide activates
+      id: "create-project",
+      title: "Create your first project",
+      description: "Start by creating a new project.",
+      buttonText: "Create project",
+      page: "/", // The page where this guide activates
       steps: [
         {
-          position: 'project-name-input',
-          instructions: 'Enter a name for your project.',
-          action: { type: 'input' as const }
+          position: "project-name-input",
+          instructions: "Enter a name for your project.",
+          action: { type: "input" as const },
         },
         {
-          position: 'create-project-button',
-          instructions: 'Click to create your project.',
-          action: { type: 'click' as const }
-        }
-      ]
-    }
-  ]
+          position: "create-project-button",
+          instructions: "Click to create your project.",
+          action: { type: "click" as const },
+        },
+      ],
+    },
+  ],
 };
 ```
 
@@ -118,24 +120,17 @@ function ProjectForm() {
   return (
     <form>
       {/* Add IDs that match your step positions */}
-      <input 
-        id="project-name-input"
-        type="text" 
-        placeholder="Project name"
-      />
-      <button id="create-project-button">
-        Create Project
-      </button>
+      <input id="project-name-input" type="text" placeholder="Project name" />
+      <button id="create-project-button">Create Project</button>
     </form>
   );
 }
 ```
 
 <Note>
-  Best practices for element identification:
-  - Use unique IDs that match your step positions exactly
-  - Keep IDs concise and descriptive
-  - Verify IDs exist on the correct pages
+  Best practices for element identification: - Use unique IDs that match your
+  step positions exactly - Keep IDs concise and descriptive - Verify IDs exist
+  on the correct pages
 </Note>
 
 ## Customization options
@@ -154,7 +149,6 @@ You can customize the appearance of your onboarding flow through these props:
   backgroundColor="#FFFFFF" // Background color of the modal/widget
   borderColor="#E5E5E5" // Color used for borders
   borderRadius="8px" // Border radius for rounded corners
-  
   // Branding
   logomark="/path-to-your-logo.svg" // Your company logo
   widgetHeader="Getting started 👋" // Custom header text
@@ -168,25 +162,27 @@ You can customize the appearance of your onboarding flow through these props:
 You can create two types of guides:
 
 1. **Step-by-step walkthrough guide**:
+
 ```typescript
 interface WorkflowGuide {
   id: string;
   title: string;
   description: string;
   buttonText: string;
-  page?: string;        // The page where this guide activates
+  page?: string; // The page where this guide activates
   steps: OnboardingStep[];
 }
 ```
 
 2. **Button-link guide** (for external resources):
+
 ```typescript
 interface WorkflowGuide {
   id: string;
   title: string;
   description: string;
   buttonText: string;
-  buttonLink: string;   // External URL to open
+  buttonLink: string; // External URL to open
 }
 ```
 
@@ -195,6 +191,7 @@ interface WorkflowGuide {
 ### Overview
 
 Custom validation allows you to create sophisticated validation rules for onboarding steps beyond simple click, input, or select events. This is particularly useful when you need to:
+
 - Validate complex user interactions
 - Check for specific input patterns or values
 - Wait for asynchronous operations to complete
@@ -211,9 +208,7 @@ customValidation: {
   condition: () => boolean, // Required: Validation function
   pollingInterval?: number, // Optional: Check frequency in ms
   timeout?: number, // Optional: Maximum wait time in ms
-  onSuccess?: () => void, // Optional: Success callback
-  onError?: () => void, // Optional: Error callback
-  },  
+  },
 };
 ```
 
@@ -244,6 +239,7 @@ Here's a simple example that validates if an input contains specific text:
 ### Advanced features
 
 #### Polling interval
+
 The `pollingInterval` property determines how frequently the condition is checked:
 
 ```typescript
@@ -254,6 +250,7 @@ customValidation: {
 ```
 
 #### Timeout handling
+
 Use `timeout` to specify how long to wait before giving up:
 
 ```typescript
@@ -264,26 +261,10 @@ customValidation: {
 }
 ```
 
-#### Success/Error callbacks
-Handle successful or failed validations with callbacks:
-
-```typescript
-customValidation: {
-  condition: () => validateUserInput(),
-  onSuccess: () => {
-    analytics.track('onboarding_step_completed');
-    showSuccessMessage();
-  },
-  onError: () => {
-    analytics.track('onboarding_step_failed');
-    showHelpMessage();
-  }
-}
-```
-
 ### Complex validation examples
 
 #### Multiple conditions
+
 Validate multiple conditions simultaneously:
 
 ```typescript
@@ -297,7 +278,7 @@ Validate multiple conditions simultaneously:
         const nameInput = document.getElementById('name') as HTMLInputElement;
         const emailInput = document.getElementById('email') as HTMLInputElement;
         const termsCheckbox = document.getElementById('terms') as HTMLInputElement;
-        
+
         return (
           nameInput?.value.length >= 3 && // Check if name is at least 3 characters
           emailInput?.value.includes('@') && // Check if email contains '@'
@@ -311,6 +292,7 @@ Validate multiple conditions simultaneously:
 ```
 
 #### Asynchronous validation
+
 Handle async operations in your validation:
 
 ```typescript
@@ -323,7 +305,7 @@ Handle async operations in your validation:
       condition: async () => {
         const input = document.getElementById('api-key') as HTMLInputElement;
         if (!input?.value) return false;
-        
+
         try {
           const response = await fetch('/api/validate-key', {
             method: 'POST',
@@ -352,16 +334,18 @@ Handle async operations in your validation:
 ## State management
 
 The onboarding system automatically manages:
+
 - Guide completion status
 - Current step within each guide
 - Cross-page navigation state
 - Button-link guide states
 
 State is persisted in localStorage using these keys:
+
 ```typescript
-const WORKFLOW_STORAGE_KEY = 'pointer-workflow-{id}';      // Guide progress
-const STATE_STORAGE_KEY = 'pointer-onboarding-state-{id}'; // Overall state
-const BUTTON_LINK_STATE_KEY = 'pointer-button-link-state-{id}'; // External link state
+const WORKFLOW_STORAGE_KEY = "pointer-workflow-{id}"; // Guide progress
+const STATE_STORAGE_KEY = "pointer-onboarding-state-{id}"; // Overall state
+const BUTTON_LINK_STATE_KEY = "pointer-button-link-state-{id}"; // External link state
 ```
 
 <Note>
@@ -376,7 +360,8 @@ const BUTTON_LINK_STATE_KEY = 'pointer-button-link-state-{id}'; // External link
   ```
   You can also simply go to Chrome DevTools, navigate to the Application tab, and clear the localStorage keys. After clearing these keys, refresh the page to restart the onboarding flow.
 
-  We are currently working on a "Dev mode" that will allow you to re-trigger the onboarding flow without clearing the localStorage keys.
+We are currently working on a "Dev mode" that will allow you to re-trigger the onboarding flow without clearing the localStorage keys.
+
 </Note>
 
 ## Complete example
@@ -458,7 +443,6 @@ const onboardingConfig = {
       description: "View the docs to learn more about Pointer.",
       buttonText: "View docs",
       buttonLink: "https://docs.pointer.so",
-      
     },
     {
       id: "join-community",
