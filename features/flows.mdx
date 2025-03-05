@@ -1,0 +1,706 @@
+---
+title: "Flows"
+description: "Learn how to set up interactive onboarding and product tours."
+---
+
+## Overview
+
+Pointer's interactive flows allow you to guide users through your application with customizable step-by-step tours, welcome screens, and checklists.
+
+## Getting started
+
+### 1. Installation and setup
+
+<Steps>
+  <Step title="Grab an API key from the Pointer dashboard.">
+    Login to the [Pointer dashboard](https://app.pointer.so), then create a project. Two keys will be automatically generated for you — a production and development key. Copy the development key and store it.
+  </Step>
+
+  <Step title="Install the Pointer SDK using your preferred package manager.">
+    <CodeGroup>
+      ```bash npm
+      npm install pointer-sdk
+      ```
+
+      ```bash pnpm
+      pnpm add pointer-sdk
+      ```
+
+      ```bash yarn
+      yarn add pointer-sdk
+      ```
+    </CodeGroup>
+
+  </Step>
+
+  <Step title="Configure your environment variables.">
+    Add the appropriate Pointer API key into your `.env` file.
+
+    ```bash
+    POINTER_API_KEY=pt_dev_*********************
+    ```
+
+    <Note>
+      Note that there are two types of API keys: development and production.
+      - **Development keys** (`pt_dev_*`):
+        - For local development only
+        - No origin restrictions
+        - Stricter rate limits
+
+      - **Production keys** (`pt_live_*`):
+        - Required for deployed applications
+        - Must specify allowed origin domains
+        - Domains must be valid (e.g., example.com)
+    </Note>
+
+  </Step>
+</Steps>
+
+### 2. Configure the provider
+
+Add the `PointerFlowProvider` to wrap your app, typically in a layout file that contains your authenticated routes:
+
+```typescript
+import { PointerFlowProvider } from "pointer-sdk";
+
+function App() {
+  return (
+    <PointerFlowProvider
+      apiKey={process.env.POINTER_API_KEY!}
+      flows={myFlows}
+      logomark="https://example.com/logo.png" // Your logo for branding
+      // See more customization options below
+    >
+      {children}
+    </PointerFlowProvider>
+  );
+}
+```
+
+### 3. Define your flows
+
+Pointer supports two main types of flows:
+
+#### Simple flow
+
+A simple (or standalone) flow is a simple product tour with a series of steps:
+
+```typescript
+const productTour = {
+  id: 'create-project-tour',
+  type: 'standalone' as const,
+  name: 'Creating a new project',
+  page: '/settings', // Page where this flow activates
+  steps: [
+    {
+      id: 'step-1',
+      type: 'guided' as const, // Currently only guided steps are supported
+      position: 'project-name-input', // ID of target element
+      content: {
+        description: 'Input your project's name here.',
+      },
+      action: { type: 'input' as const }
+    },
+    {
+      id: 'step-2',
+      type: 'guided' as const,
+      position: 'project-description-input',
+      content: {
+        description: 'Input your project's description here.',
+      },
+      action: { type: 'input' as const }
+    },
+  ],
+  // Optional trigger configuration, see below for more info
+  trigger: {
+    type: 'auto' as const, // 'auto' or 'manual'
+    condition: () => { // Optional function that determines when to show the flow, returns a boolean
+      const isNavigatingFromSettings = currentPath === '/' && previousPath === '/settings'; // Assume currentPath and previousPath have been defined
+      return isNavigatingFromSettings;
+    },
+    maxShows: 1, // Number of times to show, 1 in this case
+  }
+};
+```
+
+#### Composite flow
+
+A composite (onboarding) flow combines a welcome screen with multiple subflows and an optional checklist, typically used for onboarding flows:
+
+```typescript
+const onboardingFlow = {
+  id: "onboarding",
+  type: "composite" as const,
+  name: "Getting started",
+  // Welcome modal configuration
+  welcome: {
+    title: "Hi there 👋",
+    subtitle: "Welcome to Pointer.",
+    description: "Let's start a quick, interactive tour of the platform!",
+    image: "/path-to-image.png",
+    buttonText: "Take a tour",
+  },
+  // Subflows (individual guided tours)
+  subflows: [
+    // Settings tour with guided steps
+    {
+      id: "settings-tour",
+      type: "standalone" as const,
+      name: "Edit settings",
+      page: "/settings", // The page where this subflow activates
+      description: "Configure your workspace settings",
+      buttonText: "Configure settings",
+      steps: [
+        {
+          id: "settings-1",
+          type: "guided",
+          position: "project-name-update", // ID of target element
+          content: {
+            description:
+              "Update your project name. Must contain more than 3 characters.",
+          },
+          action: {
+            type: "input" as const,
+            // Optional custom validation
+            customValidation: {
+              condition: () => {
+                const input = document.getElementById(
+                  "projectName"
+                ) as HTMLInputElement;
+                return input && input.value.length > 3;
+              },
+              pollingInterval: 100, // Check every 100ms
+            },
+          },
+        },
+        {
+          id: "settings-2",
+          type: "guided" as const,
+          position: "notifications-button",
+          content: {
+            title: "Notifications",
+            description: "Turn on notifications here.",
+          },
+          action: { type: "click" as const },
+        },
+      ],
+    },
+    // Button-link tour (external resource)
+    {
+      id: "documentation-tour",
+      type: "standalone" as const,
+      name: "Check out our docs",
+      description: "View our docs to learn more about Pointer.",
+      buttonText: "View docs",
+      buttonLink: "https://docs.pointer.so", // External URL
+    },
+  ],
+  showChecklist: true,
+  checklistConfig: {
+    header: "Getting started 👋",
+    position: "right",
+    minimizable: true,
+  },
+};
+```
+
+### 4. Prepare your components
+
+Add IDs or data attributes to the elements you want to highlight in your flow steps:
+
+```typescript
+function ProjectForm() {
+  return (
+    <form>
+      {/* Add IDs that match your step positions */}
+      <input
+        id="project-name-input"
+        type="text"
+        placeholder="Your project name"
+      />
+      <button id="notifications-button">Click to turn on notifications</button>
+    </form>
+  );
+}
+```
+
+<Note>
+  Best practices for element identification: - Use unique IDs that match your
+  step positions exactly - Keep IDs concise and descriptive - Verify IDs exist
+  on the correct pages - You can also use data attributes like
+  `data-pointer="element-name"`
+</Note>
+
+## Flow types
+
+Here are the exact specifications for the two flow types mentioned above.
+
+### Standalone flow
+
+A standalone flow is a simple product tour with a series of steps. It's ideal for feature walkthroughs or guided tutorials that can be triggered independently.
+
+```typescript
+interface StandaloneFlow {
+  id: string; // Unique identifier
+  type: "standalone"; // Flow type
+  name: string; // Display name
+  description?: string; // Brief description
+  page?: string; // The page where this flow activates
+  buttonText?: string; // Text for the start button
+  buttonLink?: string; // For external links (creates a button-link flow)
+  trigger?: FlowTrigger; // When/how the flow is triggered
+  steps?: FlowStep[]; // The sequence of guided steps
+}
+```
+
+### Composite flow
+
+A composite flow combines a welcome screen with multiple subflows and an optional checklist. It's perfect for comprehensive onboarding experiences that guide users through multiple features.
+
+```typescript
+interface CompositeFlow {
+  id: string; // Unique identifier
+  type: "composite"; // Flow type
+  name: string; // Display name
+  description?: string; // Brief description
+  welcome: {
+    // Welcome modal configuration
+    title: string; // Main heading
+    subtitle: string; // Subheading
+    description: string; // Detailed description
+    image?: string; // Optional image URL
+    buttonText: string; // CTA button text
+  };
+  subflows: StandaloneFlow[]; // Collection of standalone flows
+  showChecklist?: boolean; // Whether to show the checklist
+  checklistConfig?: {
+    // Checklist configuration
+    header?: string; // Checklist header text
+    description?: string; // Checklist description
+    position?: "left" | "right"; // Checklist position
+    minimizable?: boolean; // Whether it can be minimized
+  };
+  trigger?: FlowTrigger; // When/how the flow is triggered
+}
+```
+
+### Standalone flows as subflows
+
+When using standalone flows as subflows within a composite (onboarding) flow, certain properties are particularly important:
+
+```typescript
+// Standalone flow when used as a subflow
+const subflow: StandaloneFlow = {
+  id: "feature-tour", // Required: Unique identifier
+  type: "standalone", // Required: Must be 'standalone'
+  name: "Feature tour", // Required: Displayed in the checklist
+  description: "Learn about this feature", // Required: Shown in the checklist
+
+  // For guided tours with steps:
+  page: "/feature", // Important: The page where steps are shown
+  steps: [
+    // The sequence of guided steps
+    // Step configuration...
+  ],
+  buttonText: "Start Tour", // Text for the start button in checklist
+
+  // OR for external resource links:
+  buttonLink: "https://docs.example.com", // External URL
+  buttonText: "View Docs", // Text for the external link button
+};
+```
+
+Key points when using standalone flows as subflows:
+
+1. For guided tours:
+
+- `page` property is crucial as it determines where the subflow will be activated
+- `steps` array defines the actual guided tour
+- `buttonText` appears on the checklist item
+
+2. For external resources:
+
+- Use `buttonLink` to create a simple link instead of a guided tour
+- No `steps` are needed for button-link subflows
+- `buttonText` is required and appears on the button in the checklist
+
+3. Common requirements:
+
+- `id`, `type`, `name`, and `description` are required for all subflows
+- Individual trigger configurations on subflows are typically ignored as the parent composite flow manages triggering
+
+## Action types
+
+Actions define how users interact with each step:
+
+```typescript
+interface Action {
+  type: "navigate" | "click" | "input" | "select" | "submit" | "custom";
+  path?: string; // For navigate actions
+  customValidation?: {
+    condition?: () => boolean;
+    pollingInterval?: number;
+    timeout?: number;
+    onSuccess?: () => void;
+    onError?: () => void;
+  };
+}
+```
+
+### Basic actions
+
+- **click**: Validates when the user clicks the target element
+- **input**: Validates when the user enters text in the target input
+- **select**: Validates when the user selects an option from a dropdown
+- **submit**: Validates when a form is submitted
+- **navigate**: Validates when the user navigates to a specific path
+
+### Custom validation
+
+Custom validation allows you to create sophisticated validation rules:
+
+```typescript
+{
+  id: "complex-step",
+  type: "guided",
+  position: "form-container",
+  content: {
+    title: "Complete the form",
+    description: "Fill out all required fields."
+  },
+  action: {
+    type: "custom",
+    customValidation: {
+      condition: () => {
+        const nameInput = document.getElementById('name') as HTMLInputElement;
+        const emailInput = document.getElementById('email') as HTMLInputElement;
+        return nameInput?.value.length > 0 && emailInput?.value.includes('@');
+      },
+      pollingInterval: 500, // Check every 500ms
+      timeout: 30000, // Give up after 30 seconds
+      onSuccess: () => console.log("Validation passed!"),
+      onError: () => console.error("Validation timed out")
+    }
+  }
+}
+```
+
+## Flow triggers
+
+Triggers determine when and how flows are activated:
+
+```typescript
+interface FlowTrigger {
+  type: "manual" | "auto";
+  condition?: () => boolean | Promise<boolean>;
+  maxShows?: number;
+  showDelay?: number;
+  persistence?: {
+    storage?: "local" | "session";
+    expiry?: number;
+  };
+}
+```
+
+### Manual triggers
+
+Manual triggers require explicit activation:
+
+```typescript
+// In your component
+import { useFlow } from "pointer-sdk";
+
+function MyComponent() {
+  const { startFlow } = useFlow();
+
+  return (
+    <button onClick={() => startFlow("feature-tour")}>Take the Tour</button>
+  );
+}
+```
+
+### Automatic triggers
+
+Automatic triggers activate based on conditions:
+
+```typescript
+const featureTour = {
+  id: "feature-tour",
+  type: "standalone",
+  name: "Feature tour",
+  // ...
+  trigger: {
+    type: "auto",
+    condition: () => {
+      // Show only for new users who haven't seen this before
+      return !localStorage.getItem("seen-feature-tour");
+    },
+    maxShows: 1, // Show only once
+    showDelay: 1000, // Wait 1 second before showing
+  },
+};
+```
+
+## useFlow
+
+## Customization
+
+### Styling
+
+For more information on how to style the onboarding components, see the [styling](https://docs.pointer.so/features/styling) page.
+
+## State management
+
+Pointer manages state automatically, including:
+
+- Active flow and subflow tracking
+- Current step position
+- Completion status
+- UI state (modal visibility, checklist state)
+- Cross-page persistence
+
+### Persistence
+
+Flow state is persisted in localStorage by default:
+
+```typescript
+// Key used for state persistence
+const FLOW_STATE_KEY = "pointer-flow-state";
+```
+
+<Note>
+  **Testing & Development** To re-trigger flows during testing or development,
+  clear the related localStorage key: ```javascript
+  localStorage.removeItem('pointer-flow-state'); ``` You can also use the Flow
+  hook to manually start flows: ```javascript const {startFlow} = useFlow();
+  startFlow("your-flow-id"); ```
+</Note>
+
+## Advanced features
+
+### Cross-page navigation
+
+Flows can span multiple pages by specifying the `page` property:
+
+```typescript
+const crossPageFlow = {
+  id: "cross-page-flow",
+  type: "standalone",
+  name: "Cross-page flow",
+  steps: [
+    {
+      id: "step-1",
+      type: "guided",
+      position: "dashboard-header",
+      page: "/dashboard",
+      content: {
+        description: "This is your dashboard.",
+      },
+      action: { type: "click" },
+    },
+    {
+      id: "step-2",
+      type: "guided",
+      position: "profile-button",
+      page: "/profile",
+      content: {
+        description: "Click here to view your profile.",
+      },
+      action: {
+        type: "navigate",
+        path: "/profile",
+      },
+    },
+  ],
+};
+```
+
+### Asynchronous validation
+
+For complex validation scenarios:
+
+```typescript
+{
+  id: "api-validation-step",
+  type: "guided",
+  position: "api-key-input",
+  content: {
+    title: "Enter API Key",
+    description: "Enter a valid API key."
+  },
+  action: {
+    type: "custom",
+    customValidation: {
+      condition: async () => {
+        const input = document.getElementById('api-key') as HTMLInputElement;
+        if (!input?.value) return false;
+
+        try {
+          const response = await fetch('/api/validate-key', {
+            method: 'POST',
+            body: JSON.stringify({ key: input.value })
+          });
+          return response.ok;
+        } catch {
+          return false;
+        }
+      },
+      pollingInterval: 1000,
+      timeout: 30000
+    }
+  }
+}
+```
+
+## Complete examples
+
+### Composite flow
+
+This is the composite (onboarding) flow used on the Pointer dashboard:
+
+```typescript
+const onboardingFlow: CompositeFlow = {
+  id: "getting-started",
+  type: "composite",
+  name: "Getting Started",
+  description: "Welcome to the platform",
+  trigger: {
+    type: "auto",
+    condition: () => {
+      const isNavigatingFromSettings =
+        currentPath === "/" && previousPath === "/settings";
+      return isNavigatingFromSettings;
+    },
+    maxShows: 1,
+    persistence: {
+      storage: "local",
+      expiry: 24 * 60 * 60 * 1000, // 24 hours
+    },
+  },
+  welcome: {
+    title: "Welcome to Pointer",
+    subtitle: "Let's get you set up",
+    description:
+      "We'll guide you through everything you need to know to get started with Pointer",
+    image: onboardingGuide,
+    buttonText: "Take a tour",
+  },
+  subflows: [
+    {
+      id: "documentation-tour",
+      type: "standalone",
+      name: "Read Documentation",
+      description: "Learn more about our platform features",
+      buttonText: "View Documentation",
+      buttonLink: "https://docs.pointer.so",
+    },
+    {
+      id: "settings-tour",
+      type: "standalone",
+      name: "Settings Configuration",
+      page: "/settings",
+      description: "Configure your workspace settings",
+      buttonText: "Configure Settings",
+      steps: [
+        {
+          id: "settings-1",
+          type: "guided",
+          position: "projectName",
+          page: "/settings",
+          content: {
+            description: "Update your project name here",
+          },
+          action: { type: "input" },
+        },
+        {
+          id: "settings-2",
+          type: "guided",
+          position: "notifications",
+          page: "/settings",
+          content: {
+            description: "Configure your notification preferences",
+          },
+          action: { type: "click" },
+        },
+      ],
+    },
+    {
+      id: "project-tour",
+      type: "standalone",
+      name: "Project Management",
+      description: "Learn how to manage your projects",
+      buttonText: "Learn Project Management",
+      steps: [
+        {
+          id: "project-1",
+          type: "guided",
+          position: "project-description",
+          page: "/",
+          content: {
+            description: "Add details about your project",
+          },
+          action: { type: "input" },
+        },
+      ],
+    },
+  ],
+  checklistConfig: {
+    header: "Getting Started 👋",
+    position: "right",
+    minimizable: true,
+  },
+};
+```
+
+### Simple (standalone) flow
+
+This is the standalone flow used to show Pointer users how to add info to their knowledge base:
+
+```typescript
+const knowledgeFlow = {
+  id: "knowledge-file-upload",
+  type: "standalone" as const,
+  name: "Adding files to your knowledge base",
+  page: "/knowledge", // This flow activates on the knowledge page
+  trigger: {
+    type: "auto" as const,
+    condition: () => {
+      // Only show for Pro users on the knowledge page
+      const currentPlan = currentProject?.plan;
+      if (!currentPlan) return false;
+
+      const isActivatedPro =
+        isProPlan(currentPlan) && !currentPlan.includes("TRIAL");
+      const isEnterprise = isEnterprisePlan(currentPlan);
+
+      return (
+        (isActivatedPro || isEnterprise) &&
+        window.location.pathname.includes("/knowledge")
+      );
+    },
+    maxShows: 1, // Show only once
+  },
+  steps: [
+    {
+      id: "highlight-add-file",
+      type: "guided" as const,
+      position: "add-file-button", // ID of the Add file button
+      content: {
+        description:
+          "Hi there, I'm Pointer. I'll quickly show you how around this page. First, click here to add a file to your knowledge base.",
+      },
+      action: { type: "click" as const },
+    },
+    {
+      id: "highlight-add-link",
+      type: "guided" as const,
+      position: "add-link-button", // ID of the Add link button that opens the dialog
+      content: {
+        description:
+          "Next, click here to add a link to your knowledge base for more accurate responses.",
+      },
+      action: { type: "click" as const },
+    },
+  ],
+};
+```

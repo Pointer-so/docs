@@ -37,16 +37,15 @@
        "group": "Overview",
        "pages": [
          "introduction",
-         "quickstart",
-         "roadmap"
-       ]
+         "quickstart"       
+        ]
      },
      {
        "group": "Features",
        "pages": [
          "features/guides",
          "features/chat",
-         "features/onboarding",
+         "features/flows",
          "features/styling"
         ]
      },
