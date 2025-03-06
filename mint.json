@@ -43,17 +43,17 @@
     {
       "group": "AI",
       "pages": [
-        "features/guides",
-        "features/chat"
+        "ai/guides",
+        "ai/chat"
       ]
     },
     {
       "group": "Flows",
       "pages": [
-        "features/getting-started",
-        "features/simple-flow",
-        "features/composite-flow",
-        "features/triggers"
+        "flows/getting-started",
+        "flows/simple-flow",
+        "flows/composite-flow",
+        "flows/triggers"
       ]
     },
     {
