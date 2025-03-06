@@ -1,0 +1,307 @@
+---
+title: "Flow triggers"
+description: "Learn how to control when and how flows appear to your users."
+---
+
+## What are flow triggers?
+
+Flow triggers determine when and how your interactive flows appear to users. They give you precise control over the user experience, ensuring flows appear at the right moment for maximum impact.
+
+Pointer offers two main trigger types:
+
+1. **Manual triggers** — Flows that start when explicitly requested by the user or your code
+
+2. **Automatic triggers** — Flows that start automatically when specified conditions are met
+
+## Manual triggers
+
+Manual triggers give you complete control over when flows begin. They're perfect for:
+
+* Help buttons that start guides on demand
+
+* Onboarding checklists where users choose what to learn
+
+* Contextual help for specific features
+
+* Support sections of your application
+
+### Implementation
+
+To manually trigger a flow, use the `useFlow` hook:
+
+```typescript
+import { useFlow } from "pointer-sdk";
+
+function HelpButton() {
+  const { startFlow } = useFlow();
+  
+  return (
+    <button 
+      onClick={() => startFlow("feature-tour")} 
+      className="help-button"
+    >
+      Start a tour
+    </button>
+  );
+}
+```
+
+The `startFlow` function takes the unique ID of the flow you want to start. This ID must match the `id` property in your flow configuration.
+
+### Available methods
+
+The `useFlow` hook provides several methods for controlling flows:
+
+```typescript
+const { 
+  startFlow,    // Start a specific flow
+  stopFlow,     // Stop the active flow
+  pauseFlow,    // Pause the active flow
+  resumeFlow,   // Resume a paused flow
+  nextStep,     // Move to the next step
+  previousStep, // Move to the previous step
+} = useFlow();
+```
+
+These methods give you programmatic control over the flow experience.
+
+## Automatic triggers
+
+Automatic triggers start flows based on conditions you define, allowing you to create proactive guidance that appears at the perfect moment. They're ideal for:
+
+* New user onboarding
+
+* Feature announcements
+
+* First-time visits to specific pages
+
+* Re-engagement for dormant users
+
+### Implementation
+
+To create an automatic trigger, add a `trigger` property to your flow configuration:
+
+```typescript
+{
+  id: "new-user-tour",
+  type: "simple",
+  name: "New user tour",
+  // Flow steps...
+  trigger: {
+    type: "auto",                // Automatic trigger
+    condition: () => {           // Function that returns boolean
+      return !localStorage.getItem("tour-completed");
+    },
+    maxShows: 1,                 // Maximum number of times to show
+    showDelay: 2000              // Wait 2 seconds before showing (milliseconds)
+  }
+}
+```
+
+### Trigger configuration
+
+The `trigger` object supports several properties:
+
+```typescript
+trigger: {
+  type: "auto" | "manual",       // The trigger type
+  condition?: () => boolean,     // Function that returns true when conditions are met
+  maxShows?: number,             // Maximum times to show this flow
+  showDelay?: number,            // Delay before showing (milliseconds)
+  persistence?: {                // How to remember show count
+    storage?: "local" | "session", // Storage type
+    expiry?: number,             // Time until persistence expires (milliseconds)
+  }
+}
+```
+
+### Condition function
+
+The `condition` function is where you define exactly when your flow should appear. This function should return `true` when the flow should trigger and `false` otherwise.
+
+Common condition patterns:
+
+* **First-time user detection**
+
+```typescript
+condition: () => !localStorage.getItem("onboarded")
+```
+
+* **Page-specific flows**
+
+```typescript
+condition: () => window.location.pathname === "/dashboard"
+```
+
+* **User segment targeting**
+
+```typescript
+condition: () => {
+  const user = getCurrentUser(); // Your function to get user data
+  return user.plan === "free" && user.createdAt < Date.now() - (30 * 86400000); // Target free users who signed up >30 days ago
+}
+```
+
+### Show limits
+
+The `maxShows` property limits how many times a flow can appear to a user. This is useful for:
+
+* One-time onboarding experiences
+
+* Feature announcements that should only appear once
+
+* Tips that should appear occasionally but not repeatedly
+
+```typescript
+trigger: {
+  type: "auto",
+  condition: () => true,
+  maxShows: 1 // Show exactly once
+}
+```
+
+Pointer automatically tracks how many times each flow has been shown to the current user using browser storage.
+
+### Show delay
+
+The `showDelay` property adds a delay (in milliseconds) before the flow appears, even when the condition is met:
+
+```typescript
+trigger: {
+  type: "auto",
+  condition: () => true,
+  showDelay: 2000 // Wait 2 seconds before showing
+}
+```
+
+This is useful for:
+
+* Giving users time to orient themselves before showing guidance
+
+* Creating a smoother experience for page transitions
+
+* Ensuring the UI is fully loaded before highlighting elements
+
+### Persistence configuration
+
+The `persistence` property controls how Pointer remembers show counts and other trigger state:
+
+```typescript
+trigger: {
+  type: "auto",
+  condition: () => true,
+  maxShows: 1,
+  persistence: {
+    storage: "local",                 // Use localStorage (persists across sessions)
+    expiry: 7 * 24 * 60 * 60 * 1000  // Reset after 7 days
+  }
+}
+```
+
+**Storage options:**
+
+* `"local"` - Uses localStorage, persists across browser sessions
+
+* `"session"` - Uses sessionStorage, persists only for current browser session
+
+The `expiry` property (in milliseconds) determines when the persistence should reset, allowing the flow to show again after the specified time period.
+
+## Trigger priority and conflicts
+
+When multiple flows have automatic triggers and their conditions are met simultaneously, Pointer uses these rules to determine which flow to show:
+
+1. Only one flow can be active at a time
+
+2. If a flow is already active, new triggers are ignored
+
+3. If multiple flows trigger simultaneously, the first one registered takes priority
+
+You can manually control trigger priority by carefully ordering your flows when registering them with the provider.
+
+## Best practices
+
+* **Be conservative with automatic triggers.** Too many automatic popups create a frustrating experience. Use them sparingly for truly important moments.
+
+* **Consider user context.** Trigger flows when users are most likely to need them and can focus on them.
+
+* **Implement appropriate delays.** Give users time to get oriented before showing guidance.
+
+* **Use appropriate show limits.** One-time onboarding should show once, while feature guidance might benefit from occasional repetition.
+
+* **Test thoroughly.** Verify trigger conditions work as expected in different scenarios.
+
+* **Provide opt-out mechanisms.** Always let users dismiss flows they don't want to see.
+
+* **Track completion metrics.** Monitor how many users complete triggered flows to optimize timing and relevance.
+
+## Practical examples
+
+* **New user onboarding**
+
+```typescript
+{
+  id: "new-user-onboarding",
+  type: "composite",
+  // Onboarding flow configuration...
+  trigger: {
+    type: "auto",
+    condition: () => {
+      const isNewUser = !localStorage.getItem("onboarded");
+      return isNewUser;
+    },
+    maxShows: 1,
+    persistence: {
+      storage: "local"
+    }
+  }
+}
+```
+
+* **Feature announcement**
+
+```typescript
+{
+  id: "new-feature-tour",
+  type: "standalone",
+  // Feature tour configuration...
+  trigger: {
+    type: "auto",
+    condition: () => {
+      const lastAnnouncementSeen = localStorage.getItem("last-announcement");
+      const newFeatureVersion = "2.0";
+      return lastAnnouncementSeen !== newFeatureVersion;
+    },
+    maxShows: 1,
+    showDelay: 3000,
+    persistence: {
+      storage: "local"
+    }
+  }
+}
+```
+
+* **Contextual help button**
+
+```typescript
+function FeatureHeader({ featureId }) {
+  const { startFlow } = useFlow();
+  
+  return (
+    <div className="feature-header">
+      <h2>Feature Name</h2>
+      <button 
+        onClick={() => startFlow(`${featureId}-tour`)}
+        className="help-button"
+      >
+        <HelpIcon /> How to use this feature
+      </button>
+    </div>
+  );
+}
+```
+
+## Next steps
+
+* Learn about [simple flows](https://docs.pointer.so/flows/simple-flow) for focused guided tours
+
+* Learn about [composite flows](https://docs.pointer.so/flows/composite-flow) for comprehensive onboarding experiences

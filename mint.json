@@ -41,12 +41,25 @@
         ]
      },
      {
-       "group": "Features",
+       "group": "AI",
        "pages": [
          "features/guides",
          "features/chat",
-         "features/flows",
-         "features/styling"
+        ]
+     },
+     {
+       "group": "Flows",
+       "pages": [
+         "features/getting-started",
+         "features/simple-flow",
+         "features/composite-flow",
+         "features/triggers",
+        ]
+     },
+     {
+       "group": "Customization",
+       "pages": [
+         "customization/styling",
         ]
      },
     {
