@@ -7,61 +7,61 @@
   },
   "favicon": "/favicon.svg",
   "colors": {
-   "primary": "#111827",
-   "light": "#F1F5F9",
-   "dark": "#111827",
-   "anchors": {
-     "from": "#111827", 
-     "to": "#202834"
-   }
+    "primary": "#111827",
+    "light": "#F1F5F9",
+    "dark": "#111827",
+    "anchors": {
+      "from": "#111827", 
+      "to": "#202834"
+    }
   },
-   "topbarLinks": [
-     {
-       "name": "Support",
-       "url": "mailto:team@pointer.so"
-     }
-   ],
-   "topbarCtaButton": {
-     "name": "Dashboard",
-     "url": "https://app.pointer.so"
-   },
-   "anchors": [
-     {
-       "name": "Community",
-       "icon": "discord",
-       "url": "https://dub.sh/pointer-community"
-     }
-   ],
-   "navigation": [
-     {
-       "group": "Overview",
-       "pages": [
-         "introduction",
-         "quickstart"       
-        ]
-     },
-     {
-       "group": "AI",
-       "pages": [
-         "features/guides",
-         "features/chat",
-        ]
-     },
-     {
-       "group": "Flows",
-       "pages": [
-         "features/getting-started",
-         "features/simple-flow",
-         "features/composite-flow",
-         "features/triggers",
-        ]
-     },
-     {
-       "group": "Customization",
-       "pages": [
-         "customization/styling",
-        ]
-     },
+  "topbarLinks": [
+    {
+      "name": "Support",
+      "url": "mailto:team@pointer.so"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Dashboard",
+    "url": "https://app.pointer.so"
+  },
+  "anchors": [
+    {
+      "name": "Community",
+      "icon": "discord",
+      "url": "https://dub.sh/pointer-community"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Overview",
+      "pages": [
+        "introduction",
+        "quickstart"       
+      ]
+    },
+    {
+      "group": "AI",
+      "pages": [
+        "features/guides",
+        "features/chat"
+      ]
+    },
+    {
+      "group": "Flows",
+      "pages": [
+        "features/getting-started",
+        "features/simple-flow",
+        "features/composite-flow",
+        "features/triggers"
+      ]
+    },
+    {
+      "group": "Customization",
+      "pages": [
+        "customization/styling"
+      ]
+    },
     {
       "group": "FAQs",
       "pages": [
@@ -70,10 +70,10 @@
         "faqs/contact-us"
       ]
     }
-   ],
-   "footerSocials": {
-     "x": "https://x.com/pointer_so",
-     "linkedin": "https://www.linkedin.com/company/pointer-so",
-     "discord": "https://dub.sh/pointer-community"
-   }
- }
+  ],
+  "footerSocials": {
+    "x": "https://x.com/pointer_so",
+    "linkedin": "https://www.linkedin.com/company/pointer-so",
+    "discord": "https://dub.sh/pointer-community"
+  }
+}
