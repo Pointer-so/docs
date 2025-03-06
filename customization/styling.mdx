@@ -1,0 +1,398 @@
+---
+title: "Styling"
+description: "Learn how to customize your widget's appearance and content."
+---
+
+## Overview
+
+Pointer's UI is fully customizable through the `PointerProvider` component. You can customize the theme colors, branding elements, and content to match your application's design system.
+
+![Styling](/styling.png)
+
+## Theme customization
+
+Customize the visual appearance of the widget by configuring colors and styling. You can provide either a single color value or an object with `light` and `dark` values for dark mode support:
+
+### Basic color configuration
+
+```typescript
+<PointerProvider
+  // Theme colors (single values)
+  primaryColor="#111827"      // Primary text and headings
+  secondaryColor="#6B7280"    // Secondary text
+  tertiaryColor="#f5f5f5"     // Tertiary elements
+  accentColor="#6366f1"       // Interactive elements
+  interactiveColor="#4f46e5"  // Interactive state colors
+  backgroundColor="#ffffff"   // Widget background
+  borderColor="#e4e4e7"      // Border color
+  borderRadius="12px"        // Border radius for components
+>
+```
+
+### Dark mode support
+
+For applications that support dark mode, you can provide different colors for light and dark modes:
+
+```typescript
+const themeColors = {
+  primaryColor: {
+    dark: "#ffffff",   // Primary color in dark mode (zinc-50)
+    light: "#111827", // Primary color in light mode (gray-800)
+  },
+  secondaryColor: {
+    dark: "#71717a",  // Secondary color in dark mode (zinc-500)
+    light: "#6B7280", // Secondary color in light mode (gray-500)
+  },
+  tertiaryColor: {
+    dark: "#27272a",  // Tertiary color in dark mode
+    light: "#f5f5f5", // Tertiary color in light mode
+  },
+  backgroundColor: {
+    dark: "#09090b",  // Background color in dark mode (zinc-950)
+    light: "#ffffff", // Background color in light mode (white)
+  },
+  accentColor: {
+    dark: "#3730a3",  // Accent color in dark mode
+    light: "#6366f1", // Accent color in light mode
+  },
+  interactiveColor: {
+    dark: "#4338ca",  // Interactive color in dark mode
+    light: "#4f46e5", // Interactive color in light mode
+  },
+  borderColor: {
+    dark: "#27272a",  // Border color in dark mode (zinc-800)
+    light: "#e4e4e7", // Border color in light mode (zinc-200)
+  },
+  borderRadius: {
+    dark: "12px",     // Border radius in dark mode
+    light: "12px",    // Border radius in light mode
+  },
+};
+
+<PointerProvider
+  apiKey={process.env.NEXT_PUBLIC_POINTER_API_KEY!}
+  primaryColor={themeColors.primaryColor}
+  secondaryColor={themeColors.secondaryColor}
+  tertiaryColor={themeColors.tertiaryColor}
+  backgroundColor={themeColors.backgroundColor}
+  accentColor={themeColors.accentColor}
+  interactiveColor={themeColors.interactiveColor}
+  borderColor={themeColors.borderColor}
+  borderRadius={themeColors.borderRadius}
+>
+```
+
+The widget will automatically use the appropriate colors based on the user's system preferences or your application's theme setting.
+
+## Branding
+
+Customize branding elements to match your company's identity:
+
+### Basic branding
+
+```typescript
+<PointerProvider
+  // Branding
+  logomark="/path-to-your-logo.png"     // Your company logo, .png or .svg
+  triggerIcon="pointer"                  // Widget trigger icon
+  triggerBackground="#ffffff"           // Trigger button background color
+  triggerIconColor="#111827"           // Trigger icon color
+  triggerBorder="#e4e4e7"             // Trigger button border color
+>
+```
+
+### Dark mode support for branding
+
+For applications that support dark mode, you can provide different values for light and dark modes:
+
+```typescript
+<PointerProvider
+  // Branding with dark mode support
+  logomark={{
+    light: "/logos/your-logo-dark.svg",  // Logo for light mode
+    dark: "/logos/your-logo-light.svg",  // Logo for dark mode
+  }}
+  triggerBackground={{
+    light: "#ffffff",
+    dark: "#09090b",
+  }}
+  triggerIconColor={{
+    light: "#111827",
+    dark: "#ffffff",
+  }}
+  triggerBorder={{
+    light: "#e4e4e7",
+    dark: "#27272a",
+  }}
+  triggerIcon="pointer"
+>
+```
+
+The `logomark` prop can be either a string path to your logo or an object with `light` and `dark` properties for different themes.
+
+The `triggerIcon` can be one of: `'sparkles'`, `'help'`, `'message'`, `'zap'`, or `'pointer'`.
+
+## Content
+
+Customize the widget's text content and messaging:
+
+```typescript
+<PointerProvider
+  // Content customization
+  welcomeMessage="Hi there 👋"              // Initial greeting
+  welcomeSubheading="How can we help?"      // Greeting subtext
+  inputPlaceholder="Ask AI anything..."     // Chat input placeholder
+>
+```
+
+## Link buttons
+
+Customize up to four link buttons that appear at the top of the widget. These buttons can be used to direct users to important resources like documentation, community, or contact information:
+
+```typescript
+<PointerProvider
+  // Link button customization
+  link1Text="Discord"                        // First button text
+  link1Icon="users"                          // First button icon
+  link1Url="https://dub.sh/pointer-community" // First button URL
+  link2Text="Documentation"                   // Second button text
+  link2Icon="book"                           // Second button icon
+  link2Url="https://docs.pointer.so"         // Second button URL
+  link3Text="Email us"                       // Third button text
+  link3Icon="mail"                           // Third button icon
+  link3Url="mailto:team@pointer.so"          // Third button URL
+  link4Text="GitHub"                         // Fourth button text
+  link4Icon="github"                         // Fourth button icon
+  link4Url="https://github.com/pointer-gg"   // Fourth button URL
+>
+```
+
+Each link button is optional and has three customizable properties:
+
+* `text`: The button's label
+
+* `icon`: A [Lucide](https://lucide.dev) icon name (e.g., 'users', 'book', 'mail', 'github')
+
+* `url`: The URL to open when clicked
+
+If not provided, the buttons will use default values pointing to Pointer's resources.
+
+## Complete example
+
+Here's a complete example showing all customization options with dark mode support:
+
+```typescript
+const themeColors = {
+  primaryColor: {
+    dark: "#ffffff",
+    light: "#111827",
+  },
+  secondaryColor: {
+    dark: "#71717a",
+    light: "#6B7280",
+  },
+  tertiaryColor: {
+    dark: "#27272a",
+    light: "#f5f5f5",
+  },
+  backgroundColor: {
+    dark: "#09090b",
+    light: "#ffffff",
+  },
+  accentColor: {
+    dark: "#3730a3",
+    light: "#6366f1",
+  },
+  interactiveColor: {
+    dark: "#4338ca",
+    light: "#4f46e5",
+  },
+  borderColor: {
+    dark: "#27272a",
+    light: "#e4e4e7",
+  },
+};
+
+<PointerProvider
+  apiKey={process.env.NEXT_PUBLIC_POINTER_API_KEY!}
+  // Theme with dark mode support
+  primaryColor={themeColors.primaryColor}
+  secondaryColor={themeColors.secondaryColor}
+  tertiaryColor={themeColors.tertiaryColor}
+  backgroundColor={themeColors.backgroundColor}
+  accentColor={themeColors.accentColor}
+  interactiveColor={themeColors.interactiveColor}
+  borderColor={themeColors.borderColor}
+  borderRadius="12px"
+  
+  // Branding with dark mode support
+  logomark={{
+    light: "/logos/your-logo-dark.svg",
+    dark: "/logos/your-logo-light.svg",
+  }}
+  triggerIcon="pointer"
+  triggerBackground={{
+    light: "#ffffff",
+    dark: "#09090b",
+  }}
+  triggerIconColor={{
+    light: "#111827",
+    dark: "#ffffff",
+  }}
+  triggerBorder={{
+    light: "#e4e4e7",
+    dark: "#27272a",
+  }}
+  
+  // Content
+  welcomeMessage="Hi there 👋"
+  welcomeSubheading="How can we help?"
+  inputPlaceholder="Ask AI anything..."
+  suggestedItems={[
+    "How do I get started?",
+    "What are the key features?",
+    "Can you help with integration?"
+  ]}
+  
+  // Link buttons
+  link1Text="Discord"
+  link1Icon="users"
+  link1Url="https://dub.sh/pointer-community"
+  link2Text="Documentation"
+  link2Icon="book"
+  link2Url="https://docs.pointer.so"
+  link3Text="Email us"
+  link3Icon="mail"
+  link3Url="mailto:team@pointer.so"
+  link4Text="GitHub"
+  link4Icon="github"
+  link4Url="https://github.com/pointer-gg"
+>
+  {/* Your app content */}
+</PointerProvider>
+```
+
+All customization properties are optional. If not provided, Pointer will use its default theme and content settings.
+
+## Debugging styling issues
+
+If you're experiencing issues with the styling not being applied correctly, here are some steps to troubleshoot:
+
+### 1. Check prop values and types
+
+Ensure your color values are valid CSS colors. The component accepts Hex codes (e.g., `"#ffffff"`).
+
+```typescript
+// ❌ Invalid - missing hash
+<PointerProvider primaryColor="ffffff">
+
+// ✅ Valid
+<PointerProvider primaryColor="#ffffff">
+```
+
+### 2. Verify dark mode configuration
+
+If you're using dark mode, ensure your theme object has both `light` and `dark` properties:
+
+```typescript
+// ❌ Invalid - missing light/dark properties
+<PointerProvider
+  primaryColor={{
+    default: "#ffffff",
+    darkMode: "#000000"
+  }}
+>
+
+// ✅ Valid
+<PointerProvider
+  primaryColor={{
+    light: "#ffffff",
+    dark: "#000000"
+  }}
+>
+```
+
+### 3. Check component hierarchy
+
+Make sure the `PointerProvider` is:
+
+* Mounted in your component tree
+
+* Wrapping the components you want to style
+
+* Not nested inside another `PointerProvider`
+
+```typescript
+// ❌ Invalid - nested providers
+<PointerProvider theme={theme1}>
+  <PointerProvider theme={theme2}>  {/* This will not work as expected */}
+    <YourComponent />
+  </PointerProvider>
+</PointerProvider>
+
+// ✅ Valid
+<PointerProvider theme={theme1}>
+  <YourComponent />
+</PointerProvider>
+```
+
+### 4. CSS override (last resort)
+
+If you've tried the above solutions and are still experiencing issues, you can use CSS overrides as a last resort. Create a CSS file with higher specificity selectors:
+
+```css
+/* styles/pointer-overrides.css */
+
+/* Override widget background */
+.pointer-widget[data-theme="light"] {
+  --pointer-background: #ffffff !important;
+}
+.pointer-widget[data-theme="dark"] {
+  --pointer-background: #09090b !important;
+}
+
+/* Override primary text color */
+.pointer-widget[data-theme="light"] {
+  --pointer-primary: #111827 !important;
+}
+.pointer-widget[data-theme="dark"] {
+  --pointer-primary: #ffffff !important;
+}
+
+/* Override accent color */
+.pointer-widget[data-theme="light"] {
+  --pointer-accent: #6366f1 !important;
+}
+.pointer-widget[data-theme="dark"] {
+  --pointer-accent: #3730a3 !important;
+}
+```
+
+Then import this CSS file in your application:
+
+```typescript
+// pages/_app.tsx or similar
+import '../styles/pointer-overrides.css';
+```
+
+Note: Using CSS overrides should be a temporary solution while you debug the root cause. The `PointerProvider` props are the recommended way to customize the widget's appearance.
+
+### 5. Debug with DevTools
+
+You can use DevTools to:
+
+1. Verify your `PointerProvider` props are being passed correctly
+
+2. Check if theme values are being properly consumed by child components
+
+3. Inspect the computed styles to see which CSS rules are being applied
+
+If you're still experiencing issues after trying these solutions, please [reach out](mailto:team@pointer.so) with:
+
+* Your theme configuration code
+
+* Screenshots of the styling issue
+
+* Browser console errors (if any)
+
+* Steps to reproduce the problem
