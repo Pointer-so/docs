@@ -377,7 +377,30 @@ import '../styles/pointer-overrides.css';
 
 Note: Using CSS overrides should be a temporary solution while you debug the root cause. The `PointerProvider` props are the recommended way to customize the widget's appearance.
 
-### 5. Debug with DevTools
+### 5. Z-index considerations
+
+The Pointer widget uses a high z-index value (`2147483647`) to ensure it appears above other elements on your page. While this should work in most cases, you might encounter issues with certain popups, modals, or dialogs:
+
+```typescript
+// The Pointer widget's z-index
+z-index: 2147483647  // Maximum possible z-index value
+```
+
+If you notice that your popups or dialogs are being hidden behind the Pointer widget, this is likely because:
+
+1. Your popup's stacking context is isolated from the main document flow
+2. The popup is using a relative z-index within a new stacking context
+3. There are intermediate elements creating new stacking contexts
+
+To resolve z-index conflicts:
+
+* Ensure your popups are rendered at the root level of your document (e.g., using a portal)
+* Check for elements with `transform`, `opacity`, or `filter` properties that might create new stacking contexts
+* Review your modal/dialog library's documentation for z-index configuration options
+
+Note: The Pointer widget intentionally uses the maximum possible z-index value to ensure it's always accessible to users. In most cases, your popups should appear below the widget for the best user experience.
+
+### 6. Debug with DevTools
 
 You can use DevTools to:
 
