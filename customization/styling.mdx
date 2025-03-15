@@ -5,9 +5,15 @@ description: "Learn how to customize your widget's appearance and content."
 
 ## Overview
 
-Pointer's UI is fully customizable through the `PointerProvider` component. You can customize the theme colors, branding elements, and content to match your application's design system.
+Pointer's UI is fully customizable through the `PointerProvider` and `PointerFlowProvider `components. You can customize the theme colors, branding elements, and content to match your application's design system.
+
+For the `PointerProvider`:
 
 ![Styling](/styling.png)
+
+For the `PointerFlowProvider`:
+
+![styling-onboarding.png](/styling-onboarding.png)
 
 ## Theme customization
 
@@ -169,11 +175,9 @@ Customize up to four link buttons that appear at the top of the widget. These bu
 
 Each link button is optional and has three customizable properties:
 
-* `text`: The button's label
-
-* `icon`: A [Lucide](https://lucide.dev) icon name (e.g., 'users', 'book', 'mail', 'github')
-
-* `url`: The URL to open when clicked
+- `text`: The button's label
+- `icon`: A [Lucide](https://lucide.dev) icon name (e.g., 'users', 'book', 'mail', 'github')
+- `url`: The URL to open when clicked
 
 If not provided, the buttons will use default values pointing to Pointer's resources.
 
@@ -278,7 +282,7 @@ All customization properties are optional. If not provided, Pointer will use its
 
 If you're experiencing issues with the styling not being applied correctly, here are some steps to troubleshoot:
 
-### 1. Check prop values and types
+### 1\. Check prop values and types
 
 Ensure your color values are valid CSS colors. The component accepts Hex codes (e.g., `"#ffffff"`).
 
@@ -290,7 +294,7 @@ Ensure your color values are valid CSS colors. The component accepts Hex codes (
 <PointerProvider primaryColor="#ffffff">
 ```
 
-### 2. Verify dark mode configuration
+### 2\. Verify dark mode configuration
 
 If you're using dark mode, ensure your theme object has both `light` and `dark` properties:
 
@@ -312,15 +316,13 @@ If you're using dark mode, ensure your theme object has both `light` and `dark` 
 >
 ```
 
-### 3. Check component hierarchy
+### 3\. Check component hierarchy
 
 Make sure the `PointerProvider` is:
 
-* Mounted in your component tree
-
-* Wrapping the components you want to style
-
-* Not nested inside another `PointerProvider`
+- Mounted in your component tree
+- Wrapping the components you want to style
+- Not nested inside another `PointerProvider`
 
 ```typescript
 // ❌ Invalid - nested providers
@@ -336,7 +338,7 @@ Make sure the `PointerProvider` is:
 </PointerProvider>
 ```
 
-### 4. CSS override (last resort)
+### 4\. CSS override (last resort)
 
 If you've tried the above solutions and are still experiencing issues, you can use CSS overrides as a last resort. Create a CSS file with higher specificity selectors:
 
@@ -377,7 +379,7 @@ import '../styles/pointer-overrides.css';
 
 Note: Using CSS overrides should be a temporary solution while you debug the root cause. The `PointerProvider` props are the recommended way to customize the widget's appearance.
 
-### 5. Z-index considerations
+### 5\. Z-index considerations
 
 The Pointer widget uses a high z-index value (`2147483647`) to ensure it appears above other elements on your page. While this should work in most cases, you might encounter issues with certain popups, modals, or dialogs:
 
@@ -394,28 +396,23 @@ If you notice that your popups or dialogs are being hidden behind the Pointer wi
 
 To resolve z-index conflicts:
 
-* Ensure your popups are rendered at the root level of your document (e.g., using a portal)
-* Check for elements with `transform`, `opacity`, or `filter` properties that might create new stacking contexts
-* Review your modal/dialog library's documentation for z-index configuration options
+- Ensure your popups are rendered at the root level of your document (e.g., using a portal)
+- Check for elements with `transform`, `opacity`, or `filter` properties that might create new stacking contexts
+- Review your modal/dialog library's documentation for z-index configuration options
 
 Note: The Pointer widget intentionally uses the maximum possible z-index value to ensure it's always accessible to users. In most cases, your popups should appear below the widget for the best user experience.
 
-### 6. Debug with DevTools
+### 6\. Debug with DevTools
 
 You can use DevTools to:
 
 1. Verify your `PointerProvider` props are being passed correctly
-
 2. Check if theme values are being properly consumed by child components
-
 3. Inspect the computed styles to see which CSS rules are being applied
 
 If you're still experiencing issues after trying these solutions, please [reach out](mailto:team@pointer.so) with:
 
-* Your theme configuration code
-
-* Screenshots of the styling issue
-
-* Browser console errors (if any)
-
-* Steps to reproduce the problem
+- Your theme configuration code
+- Screenshots of the styling issue
+- Browser console errors (if any)
+- Steps to reproduce the problem
