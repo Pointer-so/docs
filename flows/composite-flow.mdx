@@ -52,7 +52,10 @@ welcome: {
   title: "Hey there 👋",                // Main headline
   subtitle: "Welcome to Pointer!",   // Subheading
   description: "Let's take a quick, interactive tour of our platform.", // Detailed description
-  image: "/welcome-image.svg",         // Optional path to image
+  image: {
+    light: "/welcome-image-light.svg",  // Image shown in light mode
+    dark: "/welcome-image-dark.svg"     // Image shown in dark mode
+  },
   buttonText: "Take a tour",           // Call-to-action button text
 }
 ```
