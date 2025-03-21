@@ -29,6 +29,7 @@ Customize the visual appearance of the widget by configuring colors and styling.
   tertiaryColor="#f5f5f5"     // Tertiary elements
   accentColor="#6366f1"       // Interactive elements
   interactiveColor="#4f46e5"  // Interactive state colors
+  cursorColor="##6366f1"	  // Cursor color, default is accentColor
   backgroundColor="#ffffff"   // Widget background
   borderColor="#e4e4e7"      // Border color
   borderRadius="12px"        // Border radius for components
@@ -65,6 +66,10 @@ const themeColors = {
     dark: "#4338ca",  // Interactive color in dark mode
     light: "#4f46e5", // Interactive color in light mode
   },
+  cursorColor: {
+    dark: "#3730a3",  // Cursor color in dark mode
+    light: "#6366f1", // Cursor color in light mode
+  },
   borderColor: {
     dark: "#27272a",  // Border color in dark mode (zinc-800)
     light: "#e4e4e7", // Border color in light mode (zinc-200)
@@ -83,6 +88,7 @@ const themeColors = {
   backgroundColor={themeColors.backgroundColor}
   accentColor={themeColors.accentColor}
   interactiveColor={themeColors.interactiveColor}
+  cursorColor={themeColors.cursorColor}
   borderColor={themeColors.borderColor}
   borderRadius={themeColors.borderRadius}
 >
@@ -211,6 +217,10 @@ const themeColors = {
     dark: "#4338ca",
     light: "#4f46e5",
   },
+  cursorColor: {
+    dark: "#3730a3",
+    light: "#6366f1",
+  },
   borderColor: {
     dark: "#27272a",
     light: "#e4e4e7",
@@ -226,6 +236,7 @@ const themeColors = {
   backgroundColor={themeColors.backgroundColor}
   accentColor={themeColors.accentColor}
   interactiveColor={themeColors.interactiveColor}
+  cursorColor={themeColors.accentColor}
   borderColor={themeColors.borderColor}
   borderRadius="12px"
   
@@ -282,7 +293,7 @@ All customization properties are optional. If not provided, Pointer will use its
 
 If you're experiencing issues with the styling not being applied correctly, here are some steps to troubleshoot:
 
-### 1\. Check prop values and types
+### 1. Check prop values and types
 
 Ensure your color values are valid CSS colors. The component accepts Hex codes (e.g., `"#ffffff"`).
 
@@ -294,7 +305,7 @@ Ensure your color values are valid CSS colors. The component accepts Hex codes (
 <PointerProvider primaryColor="#ffffff">
 ```
 
-### 2\. Verify dark mode configuration
+### 2. Verify dark mode configuration
 
 If you're using dark mode, ensure your theme object has both `light` and `dark` properties:
 
@@ -316,7 +327,7 @@ If you're using dark mode, ensure your theme object has both `light` and `dark` 
 >
 ```
 
-### 3\. Check component hierarchy
+### 3. Check component hierarchy
 
 Make sure the `PointerProvider` is:
 
@@ -338,7 +349,7 @@ Make sure the `PointerProvider` is:
 </PointerProvider>
 ```
 
-### 4\. CSS override (last resort)
+### 4. CSS override (last resort)
 
 If you've tried the above solutions and are still experiencing issues, you can use CSS overrides as a last resort. Create a CSS file with higher specificity selectors:
 
@@ -379,7 +390,7 @@ import '../styles/pointer-overrides.css';
 
 Note: Using CSS overrides should be a temporary solution while you debug the root cause. The `PointerProvider` props are the recommended way to customize the widget's appearance.
 
-### 5\. Z-index considerations
+### 5. Z-index considerations
 
 The Pointer widget uses a high z-index value (`2147483647`) to ensure it appears above other elements on your page. While this should work in most cases, you might encounter issues with certain popups, modals, or dialogs:
 
@@ -402,7 +413,7 @@ To resolve z-index conflicts:
 
 Note: The Pointer widget intentionally uses the maximum possible z-index value to ensure it's always accessible to users. In most cases, your popups should appear below the widget for the best user experience.
 
-### 6\. Debug with DevTools
+### 6. Debug with DevTools
 
 You can use DevTools to:
 

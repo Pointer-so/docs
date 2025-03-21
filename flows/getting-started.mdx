@@ -9,19 +9,15 @@ Interactive flows help users discover and learn your product through step-by-ste
 
 With Pointer's flows, you can:
 
-* Onboard new users with guided tours of your product
-
-* Highlight new features or important functionality
-
-* Guide users through complex workflows
-
-* Increase feature adoption and user engagement
-
-* Reduce support tickets by proactively educating users
+- Onboard new users with guided tours of your product
+- Highlight new features or important functionality
+- Guide users through complex workflows
+- Increase feature adoption and user engagement
+- Reduce support tickets by proactively educating users
 
 Flows are fully customizable and can be triggered automatically (when a user visits a specific page or meets certain conditions) or manually (when a user clicks a button).
 
-We're giving flows their own section because they require additional configuration and are designed for specific scenarios!
+We're giving flows their own section because they require additional configuration and are designed for specific scenarios\\!
 
 <Note>
   Note: We're working on a visual editor and browser extension to make flow creation even easier. For now, flows are configured through code, giving you more flexibility.
@@ -33,23 +29,25 @@ We're giving flows their own section because they require additional configurati
   <Step title="Grab an API key from the Pointer dashboard.">
     Login to the [Pointer dashboard](https://app.pointer.so), then create a project. Two keys will be automatically generated for you — a production and development key. Copy the development key and store it.
   </Step>
-
   <Step title="Install the Pointer SDK using your preferred package manager.">
     <CodeGroup>
-      ```bash npm
-      npm install pointer-sdk
-      ```
 
-      ```bash pnpm
-      pnpm add pointer-sdk
-      ```
+    ```bash npm
+    npm install pointer-sdk
+    ```
 
-      ```bash yarn
-      yarn add pointer-sdk
-      ```
+    
+    ```bash pnpm
+    pnpm add pointer-sdk
+    ```
+
+    
+    ```bash yarn
+    yarn add pointer-sdk
+    ```
+
     </CodeGroup>
   </Step>
-
   <Step title="Configure your environment variables.">
     Add the appropriate Pointer API key into your `.env` file.
 
@@ -60,40 +58,31 @@ We're giving flows their own section because they require additional configurati
     <Note>
       Note that there are two types of API keys: development and production.
 
-      * **Development keys** (`pt_dev_*`):
-
-        * For local development only
-
-        * No origin restrictions
-
-        * Stricter rate limits
-
-      * **Production keys** (`pt_live_*`):
-
-        * Required for deployed applications
-
-        * Must specify allowed origin domains
-
-        * Domains must be valid (e.g., example.com)
+      - **Development keys** (`pt_dev_*`):
+        - For local development only
+        - No origin restrictions
+        - Stricter rate limits
+      - **Production keys** (`pt_live_*`):
+        - Required for deployed applications
+        - Must specify allowed origin domains
+        - Domains must be valid (e.g., example.com)
     </Note>
   </Step>
-
   <Step title="Configure the provider">
     Add the `PointerFlowProvider` to wrap your app, typically in a layout file that contains your authenticated routes:
 
     ```typescript
     import { PointerFlowProvider } from "pointer-sdk";
-
+    
     function App() {
-    return (
-    <PointerFlowProvider
-      apiKey={process.env.POINTER_API_KEY!}
-      flows={myFlows}
-      logomark="https://example.com/logo.png"
-    >
-      {children}
-    </PointerFlowProvider>
-    );
+    	return (
+    		<PointerFlowProvider
+      		 apiKey={process.env.POINTER_API_KEY!}
+             flows={myFlows}
+            >
+      		  {children}
+    		</PointerFlowProvider>
+    	);
     }
     ```
 
@@ -103,8 +92,7 @@ We're giving flows their own section because they require additional configurati
 
 ## Next steps
 
-Congrats! You've set up the `PointerFlowProvider`, and are now ready to start configuring flows.&#x20;
+Congrats\\! You've set up the `PointerFlowProvider`, and are now ready to start configuring flows. 
 
-* [Simple flows](https://docs.pointer.so/flows/simple-flow) — focused, step-by-step guided tours
-
-* [Composite flows](https://docs.pointer.so/flows/composite-flow) — comprehensive onboarding experiences
+- [Simple flows](https://docs.pointer.so/flows/simple-flow) — focused, step-by-step guided tours
+- [Composite flows](https://docs.pointer.so/flows/composite-flow) — comprehensive onboarding experiences
