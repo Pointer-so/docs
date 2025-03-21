@@ -11,26 +11,19 @@ These flows provide a structured yet flexible way for users to learn your produc
 
 ## When to use composite flows
 
-* **For new user onboarding:** Create a guided introduction to your product that helps users get started quickly. This improves activation rates by ensuring users discover key features from day one.
-
-* **For major releases:** Introduce existing users to multiple new features after a significant update. This increases feature adoption by highlighting what's new.
-
-* **For trial-to-paid conversion:** Guide trial users through your product's most valuable features before their trial expires. This improves conversion rates by showcasing your product's full value.
-
-* **For user re-engagement:** Welcome back dormant users with a refresher on key features and introduction to what's new. This helps reactivate users who haven't logged in recently.
+- **For new user onboarding:** Create a guided introduction to your product that helps users get started quickly. This improves activation rates by ensuring users discover key features from day one.
+- **For major releases:** Introduce existing users to multiple new features after a significant update. This increases feature adoption by highlighting what's new.
+- **For trial-to-paid conversion:** Guide trial users through your product's most valuable features before their trial expires. This improves conversion rates by showcasing your product's full value.
+- **For user re-engagement:** Welcome back dormant users with a refresher on key features and introduction to what's new. This helps reactivate users who haven't logged in recently.
 
 ## How composite flows work
 
 When a composite flow is triggered, users experience:
 
 1. **Welcome screen:** First, a welcome modal appears with a friendly introduction to the onboarding experience
-
 2. **Checklist display:** After clicking the welcome button, a checklist appears showing all available tours
-
 3. **Self-directed exploration:** Users can choose which features to explore in any order
-
 4. **Progress tracking:** The checklist shows which tours have been completed
-
 5. **Completion:** When all tours are finished, the onboarding experience is complete
 
 This creates a guided yet self-paced learning experience that respects users' preferences while ensuring feature discovery.
@@ -75,12 +68,22 @@ subflows: [
   {
     id: "dashboard-tour",
     type: "simple",
-    name: "Explore the dashboard",      // Name shown in checklist
-    description: "Learn about your dashboard", // Description shown in checklist
-    page: "/dashboard",                 // Page where this tour activates
-    buttonText: "Start tour",           // Button text in checklist
+    name: "Explore the dashboard",
+    description: "Learn about your dashboard",
+    page: "/dashboard",
+    buttonText: "Start tour",
+    allowRetrigger: true, // Optional: allow users to retake the tour
     steps: [
-      // Step configuration (same format as simple flows)
+      {
+        id: "dashboard-overview",
+        type: "guided", // or "self-paced"
+        position: "dashboard-header",
+        content: {
+          description: "This is your main dashboard.",
+        },
+        action: { type: "click" }, // Optional interaction
+        showCloseButton: true // Optional close button
+      }
     ]
   }
 ]
@@ -104,29 +107,36 @@ subflows: [
 The checklist helps users track their progress through the onboarding experience:
 
 ```typescript
-showChecklist: true,                // Whether to show the checklist
 checklistConfig: {
-  header: "Getting started 👋",     // Checklist title
-  position: "right",                // Position on screen
-  minimizable: true,                // Allow users to minimize
+  header: "Getting started 👋",
+  position: "right", // "left", "right", "top", "bottom", "top-start", "top-end", "bottom-start", "bottom-end"
+  triggerId: "show-checklist", // Optional element ID to trigger checklist
+  offset: 10, // Optional offset, if using a triggerId
+  minimizable: true,
 }
 ```
+
+By default, checklists appear in the bottom-right corner of the screen:
+
+![images/pointer-checklist.png](/images/pointer-checklist.png)
+
+For more control over the checklist's position, you can use a manual trigger. This is especially useful when you want to integrate the checklist with your UI (e.g., in a sidebar) and create a more native feel. Check out how [Knowt](https://knowt.com) (ed-tech, 3.5\+ million users) customizes the checklist:
+
+![images/knowt-checklist.png](/images/knowt-checklist.png)
 
 ## Using cross-page flows
 
 Composite flows can guide users across multiple pages of your application. When a subflow's page property differs from the current page, Pointer will:
 
 1. Navigate the user to the specified page
-
 2. Wait for the page to load
-
 3. Start the guided tour on the new page
 
 This creates a seamless onboarding experience that spans your entire application.
 
 ## Triggering composite flows
 
-Like simple flows, composite flows can be triggered either manually or automatically. See our [Triggers](https://docs.pointer.so/flows/triggers) page for details.
+Like simple flows, composite flows can be triggered via the `useFlow` hook. See our [Triggers](https://docs.pointer.so/flows/triggers) page for details.
 
 ## Complete example
 
@@ -200,22 +210,15 @@ const onboardingFlow = {
 
 ## Best practices
 
-* **Limit the number of subflows:** Keep your onboarding focused by including only 3-5 essential tours. Too many options can overwhelm users.
-
-* **Order subflows logically:** Arrange tours in a natural progression, with foundational features first and advanced features later.
-
-* **Make descriptions clear:** Each subflow should have a concise description explaining what users will learn.
-
-* **Use visual cues:** Include images in your welcome modal to make it engaging and set expectations.
-
-* **Allow skipping:** Don't force users to complete every tour; let them pick what's relevant to them.
-
-* **Consider user segments:** Create different onboarding flows for different user types or roles.
-
-* **Test thoroughly:** Verify your composite flow works across different devices, browsers, and screen sizes.
+- **Limit the number of subflows:** Keep your onboarding focused by including only 3-5 essential tours. Too many options can overwhelm users.
+- **Order subflows logically:** Arrange tours in a natural progression, with foundational features first and advanced features later.
+- **Make descriptions clear:** Each subflow should have a concise description explaining what users will learn.
+- **Use visual cues:** Include images in your welcome modal to make it engaging and set expectations.
+- **Allow skipping:** Don't force users to complete every tour; let them pick what's relevant to them.
+- **Consider user segments:** Create different onboarding flows for different user types or roles.
+- **Test thoroughly:** Verify your composite flow works across different devices, browsers, and screen sizes.
 
 ## Next steps
 
-* Learn about [simple flows](https://docs.pointer.so/flows/simple-flow) for focused guided tours
-
-* Explore [triggers](https://docs.pointer.so/flows/triggers) to control when flows appear
+- Learn about [simple flows](https://docs.pointer.so/flows/simple-flow) for focused guided tours
+- Explore [triggers](https://docs.pointer.so/flows/triggers) to control when flows appear

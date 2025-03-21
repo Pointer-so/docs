@@ -1,36 +1,29 @@
 ---
-description: "Description of your new file."
+description: "Learn to create step-by-step, guided tours. "
 title: "Simple flows"
 ---
 
 ## Overview
 
-Simple flows are focused, step-by-step guided tours that walk users through specific features or tasks in your application.&#x20;
+Simple flows are focused, step-by-step guided tours that walk users through specific features or tasks in your application. 
 
 Unlike comprehensive [onboarding flows](https://docs.pointer.so/flows/composite-flow), simple flows tackle one specific goal—like creating a project, setting up a profile, or understanding a dashboard. They provide contextual guidance right when and where users need it.
 
 ## When to use simple flows
 
-* **For new features:** Introduce users to functionality they haven't used before. Instead of hoping users discover new features, proactively show them how to use them.
-
-* **For complex processes:** Guide users through multi-step workflows that might otherwise cause confusion. This reduces friction and increases completion rates for important tasks.
-
-* **For converting free users:** Highlight premium functionality to free users with targeted tours. Show them what they're missing to encourage upgrades.
-
-* **For contextual help:** Provide in-app assistance for specific tasks when users request it. This reduces support tickets and increases user confidence.
+- **For new features:** Introduce users to functionality they haven't used before. Instead of hoping users discover new features, proactively show them how to use them.
+- **For complex processes:** Guide users through multi-step workflows that might otherwise cause confusion. This reduces friction and increases completion rates for important tasks.
+- **For converting free users:** Highlight premium functionality to free users with targeted tours. Show them what they're missing to encourage upgrades.
+- **For contextual help:** Provide in-app assistance for specific tasks when users request it. This reduces support tickets and increases user confidence.
 
 ## How simple flows work
 
 When a simple flow is triggered, it guides users through a series of steps:
 
 1. **Highlighting:** The flow highlights a specific UI element on your page
-
 2. **Instruction:** It displays contextual instructions for that element
-
 3. **Action:** It waits for the user to complete the specified action (click, input, etc.)
-
 4. **Progression:** After the action is completed, it automatically moves to the next step
-
 5. **Completion:** When all steps are finished, the flow ends
 
 This creates a guided, interactive experience that ensures users successfully complete each action before moving forward.
@@ -60,19 +53,27 @@ Steps guide users through the feature. Each step highlights a specific element a
 steps: [
   {
     id: "create-project-step",   // Unique identifier for this step
-    type: "guided",              // The type of step, use "guided"
+    type: "guided",              // Step type: 'guided' | 'self-paced'
     position: "create-button",   // Element ID to highlight
     content: {
       description: "Click this button to create a project." // Description of the step
     }
+	
   }
 ]
 ```
 
 The `position` value should match the ID of an element in your application. Pointer will find this element and highlight it during the tour.
 
+The `type` can be either guided or self-paced:
+
+- **Guided steps** automatically progress when the user completes the specified action.
+- **Self-paced steps** give users more control over their progress. They are typically used for documentation-style guides or tips. 
+
+![images/step-types.png](/images/step-types.png)
+
 <Note>
-  Note: When configuring a step, you'll see more props available. However, those are only used when creating a composite flow. Any other props added when creating a simple flow will not be visible.&#x20;
+  Note: When configuring a step, you'll see more props available. However, those are only used when creating a composite flow. Any other props added when creating a simple flow will not be visible. 
 </Note>
 
 ### 3. Actions
@@ -93,17 +94,10 @@ Actions make your flow interactive, defining what the user needs to do to procee
 }
 ```
 
-The action types are:
+Supported action types are:
 
-* `click` — wait for the user to click the highlighted element
-
-* `input` — wait for the user to type in a form field
-
-* `select` — wait for the user to select an option from a dropdown
-
-* `submit` — wait for a form submission
-
-* `navigate` — wait for navigation to a specific page
+- `click` — wait for the user to click the highlighted element
+- `input` — wait for the user to type in a form field
 
 ## Creating page-specific flows
 
@@ -125,7 +119,7 @@ The flow will only activate when the user is on the specified page, ensuring con
 
 ## Creating cross-page flows
 
-Sometimes you need to guide users across multiple pages of your application. This is possible by specifying different pages for individual steps and using navigate actions.&#x20;
+Sometimes you need to guide users across multiple pages of your application. This is possible by specifying different pages for individual steps and using navigate actions. 
 
 ```typescript
 steps: [
@@ -158,7 +152,7 @@ steps: [
 Pointer automatically handles the page transitions, waiting for the new page to load before continuing the flow.
 
 <Note>
-  Note: for cross-page flows, we recommend setting up a [composite flow](https://docs.pointer.so/flows/composite-flow). Simple flows are ideal for quick, single page flows.&#x20;
+  Note: for cross-page flows, we recommend setting up a [composite flow](https://docs.pointer.so/flows/composite-flow). Simple flows are ideal for quick, single page flows. 
 </Note>
 
 ## Creating external link flows
@@ -167,13 +161,7 @@ Not all guidance needs to happen within your app. You can create flows that dire
 
 ## Triggering simple flows
 
-You can trigger simple flows in two ways:
-
-1. **Manual triggers** — Start flows on demand when users click buttons or interact with your UI
-
-2. **Automatic triggers** — Start flows automatically based on conditions you define
-
-For complete details on both triggering methods, see our [Triggers](https://docs.pointer.so/flows/simple-flow) page.
+You can trigger flows using the `useFlow` hook. Check out the Triggers page for more info. 
 
 ## Complete example
 
@@ -213,22 +201,15 @@ const dashboardTour = {
 
 ## Best practices
 
-* **Focus on one goal** per flow. Each flow should help users accomplish a specific task.
-
-* **Keep instructions concise**. Tell users exactly what to do in as few words as possible.
-
-* **Explain the "why"** not just the "what." Help users understand why each step matters.
-
-* **Test on multiple devices** to ensure your flows work well on different screen sizes.
-
-* **Validate user actions** to ensure users successfully complete each step before moving forward.
-
-* **Consider keyboard navigation** for users who don't use a mouse.
-
-* **Avoid blocking critical UI** elements with your flow tooltips.
+- **Focus on one goal** per flow. Each flow should help users accomplish a specific task.
+- **Keep instructions concise**. Tell users exactly what to do in as few words as possible.
+- **Explain the "why"** not just the "what." Help users understand why each step matters.
+- **Test on multiple devices** to ensure your flows work well on different screen sizes.
+- **Validate user actions** to ensure users successfully complete each step before moving forward.
+- **Consider keyboard navigation** for users who don't use a mouse.
+- **Avoid blocking critical UI** elements with your flow tooltips.
 
 ## Next steps
 
-* Learn about [composite flows](https://docs.pointer.so/flows/composite-flow) for comprehensive onboarding experiences
-
-* Explore [triggers](https://docs.pointer.so/flows/triggers) to control when flows appear
+- Learn about [composite flows](https://docs.pointer.so/flows/composite-flow) for comprehensive onboarding experiences
+- Explore [triggers](https://docs.pointer.so/flows/triggers) to control when flows appear
