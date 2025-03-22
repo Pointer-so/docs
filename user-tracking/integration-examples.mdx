@@ -1,0 +1,221 @@
+---
+title: "Integration examples"
+description: "Examples of integrating user tracking with popular frameworks and authentication systems."
+---
+
+## Overview
+
+This guide provides practical examples for integrating Pointer's user tracking with popular frameworks and authentication systems. These examples will help you quickly implement user tracking in your specific tech stack.
+
+## React integration examples
+
+### Next.js
+
+If using the `app` router:
+
+```typescript
+// app/layout.tsx
+import { PointerProvider } from 'pointer-sdk';
+import { getSession } from '@/lib/auth';
+
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  // Get user session server-side
+  const session = await getSession();
+  
+  const userData = session?.user ? {
+    userId: session.user.id,
+    name: session.user.name,
+    email: session.user.email,
+    avatarUrl: session.user.image,
+    customData: {
+      plan: session.user.plan,
+      teamId: session.user.teamId
+    }
+  } : undefined;
+  
+  return (
+    <html>
+      <body>
+        <PointerProvider 
+          apiKey={process.env.NEXT_PUBLIC_POINTER_API_KEY!}
+          userData={userData}
+        >
+          {children}
+        </PointerProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+If using the `pages` router:
+
+```typescript
+// pages/_app.tsx
+import { PointerProvider } from 'pointer-sdk';
+import { useSession } from 'next-auth/react';
+
+export default function App({ Component, pageProps }) {
+  const { data: session } = useSession();
+  
+  const userData = session?.user ? {
+    userId: session.user.id,
+    name: session.user.name,
+    email: session.user.email,
+    avatarUrl: session.user.image
+  } : undefined;
+  
+  return (
+    <PointerProvider 
+      apiKey={process.env.NEXT_PUBLIC_POINTER_API_KEY!}
+      userData={userData}
+    >
+      <Component {...pageProps} />
+    </PointerProvider>
+  );
+}
+```
+
+### Create React app
+
+```typescript
+// src/App.tsx
+import { PointerProvider } from 'pointer-sdk';
+import { useAuth } from './auth';
+
+function App() {
+  const { user } = useAuth();
+  
+  const userData = user ? {
+    userId: user.id,
+    name: user.name,
+    email: user.email
+  } : undefined;
+  
+  return (
+    <PointerProvider 
+      apiKey={process.env.REACT_APP_POINTER_API_KEY!}
+      userData={userData}
+    >
+      <Router>
+        {/* Your app routes */}
+      </Router>
+    </PointerProvider>
+  );
+}
+```
+
+## Authentication integration examples
+
+### Auth0
+
+```typescript
+import { useAuth0 } from '@auth0/auth0-react';
+import { useEffect } from 'react';
+import { useUser } from 'pointer-sdk';
+
+function Auth0Integration() {
+  const { user, isAuthenticated, isLoading } = useAuth0();
+  const { setUserData, clearUserData } = useUser();
+  
+  useEffect(() => {
+    if (isLoading) return;
+    
+    if (isAuthenticated && user) {
+      setUserData({
+        userId: user.sub,
+        name: user.name,
+        email: user.email,
+        avatarUrl: user.picture,
+        customData: {
+          locale: user.locale,
+          emailVerified: user.email_verified
+        }
+      });
+    } else {
+      clearUserData();
+    }
+  }, [isAuthenticated, isLoading, user]);
+  
+  return null; // This is just an integration component
+}
+
+// Use this component within your PointerProvider
+```
+
+### Firebase authentication
+
+```typescript
+import { useEffect } from 'react';
+import { useUser } from 'pointer-sdk';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './firebaseConfig';
+
+function FirebaseAuthIntegration() {
+  const { setUserData, clearUserData } = useUser();
+  
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        setUserData({
+          userId: firebaseUser.uid,
+          name: firebaseUser.displayName || undefined,
+          email: firebaseUser.email || undefined,
+          avatarUrl: firebaseUser.photoURL || undefined,
+          customData: {
+            emailVerified: firebaseUser.emailVerified,
+            phoneNumber: firebaseUser.phoneNumber
+          }
+        });
+      } else {
+        clearUserData();
+      }
+    });
+    
+    return () => unsubscribe();
+  }, []);
+  
+  return null;
+}
+```
+
+### Clerk
+
+```typescript
+import { useUser as useClerkUser } from '@clerk/nextjs';
+import { useUser as usePointerUser } from 'pointer-sdk';
+import { useEffect } from 'react';
+
+function ClerkIntegration() {
+  const { user: clerkUser, isLoaded } = useClerkUser();
+  const { setUserData, clearUserData } = usePointerUser();
+  
+  useEffect(() => {
+    if (!isLoaded) return;
+    
+    if (clerkUser) {
+      setUserData({
+        userId: clerkUser.id,
+        name: `${clerkUser.firstName} ${clerkUser.lastName}`.trim(),
+        email: clerkUser.primaryEmailAddress?.emailAddress,
+        avatarUrl: clerkUser.imageUrl,
+        customData: {
+          username: clerkUser.username
+        }
+      });
+    } else {
+      clearUserData();
+    }
+  }, [clerkUser, isLoaded]);
+  
+  return null;
+}
+```
+
+<Note>
+  The `customData` field is flexible and can include any JSON-serializable data that's relevant to your application. Use this to store organization information, user preferences, or other context that can help personalize the user experience.
+</Note> 

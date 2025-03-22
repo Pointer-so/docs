@@ -57,6 +57,15 @@
       ]
     },
     {
+      "group": "User tracking",
+      "pages": [
+        "user-tracking/getting-started",
+        "user-tracking/event-tracking",
+        "user-tracking/api-reference",
+        "user-tracking/integration-examples"
+      ]
+    },
+    {
       "group": "Customization",
       "pages": [
         "customization/styling"
