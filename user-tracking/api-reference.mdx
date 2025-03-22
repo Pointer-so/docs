@@ -1,0 +1,455 @@
+---
+title: "API reference"
+description: "Complete reference for Pointer's user tracking API."
+---
+
+## Data types
+
+<Tabs>
+  <Tab title="EndUserData">
+    The core type for identifying a user in your application.
+    
+    ```typescript
+    interface EndUserData {
+      /**
+       * Required unique identifier for the user.
+       * Use a stable, persistent ID from your authentication system.
+       */
+      userId: string;
+      
+      /**
+       * Optional full name of the user.
+       */
+      name?: string;
+      
+      /**
+       * Optional email address of the user.
+       */
+      email?: string;
+      
+      /**
+       * Optional URL to the user's avatar image.
+       */
+      avatarUrl?: string;
+      
+      /**
+       * Optional HMAC signature for verifying user identity.
+       * This should be generated server-side using your Pointer secret key.
+       */
+      hmacSignature?: string;
+      
+      /**
+       * Optional custom data for storing additional user information.
+       * This can include any JSON-serializable data.
+       */
+      customData?: Record<string, any>;
+    }
+    ```
+    
+    <Properties>
+      <Property name="userId" type="string" required>
+        A stable, unique identifier for the user from your authentication system.
+      </Property>
+      <Property name="name" type="string">
+        The user's full name.
+      </Property>
+      <Property name="email" type="string">
+        The user's email address.
+      </Property>
+      <Property name="avatarUrl" type="string">
+        URL to the user's profile picture or avatar.
+      </Property>
+      <Property name="hmacSignature" type="string">
+        Server-generated signature to verify the user's identity.
+      </Property>
+      <Property name="customData" type="object">
+        Any additional JSON-serializable data you want to associate with the user.
+      </Property>
+    </Properties>
+  </Tab>
+  
+  <Tab title="UserEvent">
+    Used for tracking custom events in your application.
+    
+    ```typescript
+    interface UserEvent {
+      /**
+       * The type/category of the event.
+       * Examples: 'FEATURE_USAGE', 'ACCOUNT_UPDATE', 'WORKFLOW_COMPLETION'
+       */
+      eventType: string;
+      
+      /**
+       * The specific name of the event.
+       * Examples: 'export_report', 'subscription_changed', 'completed_setup'
+       */
+      eventName: string;
+      
+      /**
+       * Optional additional context for the event.
+       * This can include any JSON-serializable data.
+       */
+      metadata?: Record<string, any>;
+    }
+    ```
+    
+    <Properties>
+      <Property name="eventType" type="string" required>
+        Category of the event (e.g., 'FEATURE_USAGE', 'ACCOUNT_UPDATE').
+      </Property>
+      <Property name="eventName" type="string" required>
+        Specific action or milestone (e.g., 'export_report', 'subscription_changed').
+      </Property>
+      <Property name="metadata" type="object">
+        Optional additional context for the event.
+      </Property>
+    </Properties>
+  </Tab>
+</Tabs>
+
+## React hook API
+
+### useUser
+
+<CodeGroup>
+  ```typescript Types
+  function useUser(): {
+    /**
+     * The current user data, or undefined if no user is set.
+     */
+    userData: EndUserData | undefined;
+    
+    /**
+     * Set or update the user data.
+     * This will replace any existing user data.
+     */
+    setUserData: (userData: EndUserData) => void;
+    
+    /**
+     * Clear all user data.
+     * This is typically used during logout.
+     */
+    clearUserData: () => void;
+    
+    /**
+     * Track a custom event.
+     */
+    trackEvent: (event: UserEvent) => Promise<void>;
+    
+    /**
+     * Update the overall onboarding status for the user.
+     */
+    updateOnboardingStatus: (completed: boolean) => Promise<void>;
+    
+    /**
+     * Update progress for a specific onboarding step.
+     */
+    updateOnboardingProgress: (progress: OnboardingProgress) => Promise<void>;
+  }
+  ```
+
+  ```typescript Example
+  import { useUser } from 'pointer-sdk';
+  import { useEffect } from 'react';
+
+  function UserProfile() {
+    const { 
+      userData,
+      setUserData,
+      clearUserData,
+      trackEvent
+    } = useUser();
+    
+    // Track profile view
+    useEffect(() => {
+      trackEvent({
+        eventType: 'PROFILE',
+        eventName: 'profile_viewed'
+      });
+    }, []);
+    
+    // Handle profile update
+    const updateProfile = (newData) => {
+      setUserData({
+        ...userData,
+        name: newData.name,
+        email: newData.email,
+        customData: {
+          ...userData?.customData,
+          preferences: newData.preferences
+        }
+      });
+      
+      trackEvent({
+        eventType: 'PROFILE',
+        eventName: 'profile_updated'
+      });
+    };
+    
+    return (
+      <div>
+        {/* Profile UI */}
+      </div>
+    );
+  }
+  ```
+</CodeGroup>
+
+## Direct API methods
+
+For use outside of React components or for non-React applications.
+
+<ApiList>
+  <ApiItem name="setUser" type="function">
+    <Fragment slot="signature">
+      ```typescript
+      function setUser(userData: EndUserData): void
+      ```
+    </Fragment>
+    <Fragment slot="description">
+      Set or update the user data. This will replace any existing user data.
+    </Fragment>
+    <Fragment slot="example">
+      ```typescript
+      import { setUser } from 'pointer-sdk';
+      
+      function onLoginSuccess(user) {
+        setUser({
+          userId: user.id,
+          name: user.name,
+          email: user.email
+        });
+      }
+      ```
+    </Fragment>
+  </ApiItem>
+  
+  <ApiItem name="getUserData" type="function">
+    <Fragment slot="signature">
+      ```typescript
+      function getUserData(): EndUserData | undefined
+      ```
+    </Fragment>
+    <Fragment slot="description">
+      Get the current user data, or undefined if no user is set.
+    </Fragment>
+    <Fragment slot="example">
+      ```typescript
+      import { getUserData } from 'pointer-sdk';
+      
+      function checkUserStatus() {
+        const userData = getUserData();
+        if (userData) {
+          console.log(`User ${userData.name} is logged in`);
+        } else {
+          console.log('No user is logged in');
+        }
+      }
+      ```
+    </Fragment>
+  </ApiItem>
+  
+  <ApiItem name="clearUserData" type="function">
+    <Fragment slot="signature">
+      ```typescript
+      function clearUserData(): void
+      ```
+    </Fragment>
+    <Fragment slot="description">
+      Clear all user data. This is typically used during logout.
+    </Fragment>
+    <Fragment slot="example">
+      ```typescript
+      import { clearUserData } from 'pointer-sdk';
+      
+      function handleLogout() {
+        clearUserData();
+        // Continue with logout process
+      }
+      ```
+    </Fragment>
+  </ApiItem>
+  
+  <ApiItem name="trackEvent" type="function">
+    <Fragment slot="signature">
+      ```typescript
+      function trackEvent(event: UserEvent): Promise<void>
+      ```
+    </Fragment>
+    <Fragment slot="description">
+      Track a custom event.
+    </Fragment>
+    <Fragment slot="example">
+      ```typescript
+      import { trackEvent } from 'pointer-sdk';
+      
+      function exportReport(format) {
+        // Export logic...
+        
+        trackEvent({
+          eventType: 'FEATURE_USAGE',
+          eventName: 'export_report',
+          metadata: { format }
+        });
+      }
+      ```
+    </Fragment>
+  </ApiItem>
+  
+  <ApiItem name="updateOnboardingStatus" type="function">
+    <Fragment slot="signature">
+      ```typescript
+      function updateOnboardingStatus(completed: boolean): Promise<void>
+      ```
+    </Fragment>
+    <Fragment slot="description">
+      Update the overall onboarding status for the user.
+    </Fragment>
+    <Fragment slot="example">
+      ```typescript
+      import { updateOnboardingStatus } from 'pointer-sdk';
+      
+      function completeOnboarding() {
+        updateOnboardingStatus(true);
+        // Navigate to main app
+      }
+      ```
+    </Fragment>
+  </ApiItem>
+  
+  <ApiItem name="updateOnboardingProgress" type="function">
+    <Fragment slot="signature">
+      ```typescript
+      function updateOnboardingProgress(progress: OnboardingProgress): Promise<void>
+      ```
+    </Fragment>
+    <Fragment slot="description">
+      Update progress for a specific onboarding step.
+    </Fragment>
+    <Fragment slot="example">
+      ```typescript
+      import { updateOnboardingProgress } from 'pointer-sdk';
+      
+      function completeProfileStep() {
+        updateOnboardingProgress({
+          step: 'profile_setup',
+          completed: true
+        });
+        // Continue to next step
+      }
+      ```
+    </Fragment>
+  </ApiItem>
+</ApiList>
+
+## Props API
+
+<Tabs>
+  <Tab title="PointerProvider">
+    ```typescript
+    interface PointerProviderProps {
+      /**
+       * Your Pointer API key from the dashboard.
+       */
+      apiKey: string;
+      
+      /**
+       * Optional user data to identify the current user.
+       */
+      userData?: EndUserData;
+      
+      /**
+       * Optional first name of the user (legacy).
+       * For new applications, use userData.name instead.
+       * @deprecated
+       */
+      userFirstName?: string;
+      
+      // ... other props
+    }
+    ```
+  </Tab>
+  
+  <Tab title="PointerFlowProvider">
+    ```typescript
+    interface PointerFlowProviderProps {
+      /**
+       * Your Pointer API key from the dashboard.
+       */
+      apiKey: string;
+      
+      /**
+       * Optional user data to identify the current user.
+       */
+      userData?: EndUserData;
+      
+      /**
+       * Optional first name of the user (legacy).
+       * For new applications, use userData.name instead.
+       * @deprecated
+       */
+      userFirstName?: string;
+      
+      /**
+       * Your flow configurations.
+       */
+      flows: FlowConfig[];
+      
+      // ... other props
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Flow completion behavior
+
+When a user completes all steps in a flow, this completion is registered in their user data. Once a flow is registered as complete, it cannot be started again for that user, enabling one-time onboarding experiences.
+
+## Error handling
+
+<CodeGroup>
+  ```typescript Try/Catch
+  try {
+    await trackEvent({
+      eventType: 'FEATURE_USAGE',
+      eventName: 'export_report'
+    });
+    console.log('Event tracked successfully');
+  } catch (error) {
+    console.error('Failed to track event:', error);
+    // Handle error (retries, fallbacks, etc.)
+  }
+  ```
+
+  ```typescript Async/Await
+  async function trackUserEvent() {
+    try {
+      await trackEvent({
+        eventType: 'FEATURE_USAGE',
+        eventName: 'export_report'
+      });
+      return true;
+    } catch (error) {
+      console.error('Failed to track event:', error);
+      return false;
+    }
+  }
+  ```
+</CodeGroup>
+
+<Note>
+  Most user tracking operations are designed to fail gracefully to prevent disrupting the user experience. Errors are logged but don't typically cause application failures.
+</Note>
+
+## Data persistence
+
+User data is persisted in the following ways:
+
+- **In-memory cache**: For fast access during the current session
+- **Local storage**: For persistence across page reloads  
+- **Server**: For analytics and personalization
+
+### Security considerations
+
+- Sensitive data is never stored in `customData` field
+- User data is only accessible within your application domain 
