@@ -1,0 +1,168 @@
+---
+title: "Getting started"
+description: "Identify users and track their interactions with your app."
+---
+
+## Overview
+
+User tracking allows you to identify users in your application, personalize their experience, and track their progress through onboarding flows and feature usage. This powerful feature enables you to:
+
+- **User identity**: Maintain user identity across sessions for consistent experiences
+- **Personalization**: Create personalized content and flows based on user data  
+- **Flow tracking**: Track completion of guided tours and onboarding steps
+- **Event analytics**: Record custom events for detailed usage analytics
+
+<Note>
+  This feature is only available for users on Pro and Growth plans. To upgrade, please visit the [billing](https://app.pointer.so/settings?tab=billing) page in our dashboard. 
+</Note>
+
+## Setup
+
+Follow the steps below to quickly get started with user tracking:
+
+<Steps>
+  <Step title="Configure the PointerProvider with user data.">
+    Pass user information to the `PointerProvider` or `PointerFlowProvider` when initializing:
+
+    ```typescript
+    import { PointerProvider } from 'pointer-sdk';
+
+    function App() {
+      return (
+        <PointerProvider 
+          apiKey={process.env.POINTER_API_KEY!}
+          userData={{
+            userId: "user_123",           // Required
+            name: "Jane Smith",           // Optional
+            email: "jane@example.com",    // Optional
+            avatarUrl: "/avatar.png",     // Optional
+            customData: {                 // Optional
+              plan: "premium",
+              companyId: "company_456"
+            }
+          }}
+        >
+          {children}
+        </PointerProvider>
+      );
+    }
+    ```
+
+    <Note>
+      At minimum, you must provide a `userId` to identify the user. Additional fields are optional but recommended for better personalization.
+    </Note>
+  </Step>
+
+  <Step title="Manage user data dynamically with the useUser hook.">
+    For dynamic user management in your components, use the `useUser` hook:
+
+    ```typescript
+    import { useUser } from 'pointer-sdk';
+
+    function ProfilePage() {
+      const { userData, setUserData, clearUserData } = useUser();
+      
+      // Display user information
+      return (
+        <div>
+          <h1>Welcome, {userData?.name}</h1>
+          <button onClick={() => clearUserData()}>Logout</button>
+        </div>
+      );
+    }
+    ```
+
+    This hook provides reactive access to user data across your application.
+  </Step>
+</Steps>
+
+## Managing user data
+
+Pointer provides multiple ways to manage user data depending on your application's architecture.
+
+<Tabs>
+  <Tab title="React hooks">
+    The `useUser` hook provides a simple interface for components to interact with user data:
+
+    ```typescript
+    import { useUser } from 'pointer-sdk';
+    import { useEffect } from 'react';
+
+    function AuthenticatedApp() {
+      const { userData, setUserData, clearUserData } = useUser();
+      
+      // Set user data after login
+      useEffect(() => {
+        if (authState.isAuthenticated) {
+          setUserData({
+            userId: authState.user.id,
+            name: authState.user.name,
+            email: authState.user.email
+          });
+        }
+      }, [authState.isAuthenticated]);
+      
+      // Clear user data on logout
+      const handleLogout = () => {
+        clearUserData();
+        // Additional logout logic
+      };
+      
+      return (
+        <div>
+          {/* Your app content */}
+        </div>
+      );
+    }
+    ```
+  </Tab>
+
+  <Tab title="Direct API methods">
+    For non-React environments or for use outside of components, you can use the direct API methods:
+
+    ```typescript
+    import { setUser, getUserData, clearUserData } from 'pointer-sdk';
+
+    // After authentication
+    function onLoginSuccess(user) {
+      setUser({
+        userId: user.id,
+        name: user.name,
+        email: user.email
+      });
+      
+      // Redirect or continue
+    }
+
+    // Before logout
+    function onLogout() {
+      clearUserData();
+      // Continue with logout process
+    }
+
+    // Check current user
+    function getCurrentUser() {
+      const userData = getUserData();
+      return userData;
+    }
+    ```
+  </Tab>
+</Tabs>
+
+### User data persistence
+
+User data is automatically persisted in the browser's localStorage. This ensures that users remain identified across page refreshes and new sessions until explicitly logged out.
+
+<Warning>
+  Be careful not to store sensitive information in the user's customData field as it will be persisted to localStorage.
+</Warning>
+
+<Note>
+  The SDK automatically manages the storage and retrieval of user data, so you don't need to handle persistence yourself.
+</Note>
+
+## Next steps
+
+- [Track events](/user-tracking/event-tracking) — Learn how to capture user actions and milestones
+- [Integration examples](/user-tracking/integration-examples) — Examples for common frameworks and auth systems  
+- [API reference](/user-tracking/api-reference) — Detailed API documentation
