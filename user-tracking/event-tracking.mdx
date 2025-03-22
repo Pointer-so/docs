@@ -1,0 +1,118 @@
+---
+title: "Event tracking"
+description: "Track user interactions and progress in your application."
+---
+
+## Overview
+
+Event tracking allows you to monitor how users interact with your application, track their progress through flows, and record important milestones. This data helps you understand user behavior, improve your product, and provide personalized experiences.
+
+Pointer provides a flexible system for tracking:
+- **Custom events**: Record any user interaction or important milestone
+- **Flow completion**: Record which guided flows users have completed
+
+## Tracking custom events
+
+Custom events represent user interactions or milestones in your application. They can provide valuable insights into how users engage with your product.
+
+<CodeGroup>
+  ```typescript React hooks
+  import { useUser } from 'pointer-sdk';
+
+  function FeaturePage() {
+    const { trackEvent } = useUser();
+    
+    const handleFeatureUsage = () => {
+      // Your feature logic here
+      
+      // Track the event
+      trackEvent({
+        eventType: 'FEATURE_USAGE',
+        eventName: 'export_report',
+        metadata: {
+          reportType: 'analytics',
+          format: 'csv'
+        }
+      });
+    };
+    
+    return (
+      <button onClick={handleFeatureUsage}>
+        Export Report
+      </button>
+    );
+  }
+  ```
+
+  ```typescript Direct API
+  import { trackEvent } from 'pointer-sdk';
+
+  function handleSubscriptionChange(newPlan) {
+    // Update subscription in your system
+    
+    // Track the event
+    trackEvent({
+      eventType: 'ACCOUNT_UPDATE',
+      eventName: 'subscription_changed',
+      metadata: {
+        previousPlan: 'basic',
+        newPlan: newPlan,
+        annual: true
+      }
+    });
+  }
+  ```
+</CodeGroup>
+
+## Flow completion tracking
+
+Flows are guided walkthroughs that help users accomplish specific tasks. The SDK tracks flow completion internally with no manual code required.
+
+### Flow completion behavior
+
+- Once a flow is registered as complete for a user, it cannot be started again for that user
+- This allows you to create one-time onboarding experiences or prevent users from seeing the same guided tour multiple times
+
+If you need to check whether a user has completed a specific flow in your UI, you can use the user's custom data which will contain flow completion information.
+
+## Event schema
+
+When tracking events, you can use the following schema properties:
+
+<ResponseField name="eventType" type="string" required>
+  Category of the event (e.g., `FEATURE_USAGE`, `ACCOUNT_UPDATE`)
+</ResponseField>
+
+<ResponseField name="eventName" type="string" required>
+  Specific action or milestone (e.g., `export_report`, `subscription_changed`)
+</ResponseField>
+
+<ResponseField name="metadata" type="object" optional>
+  Additional context for the event
+  
+  <Expandable title="Metadata example">
+    ```json
+    {
+      "previousPlan": "basic",
+      "newPlan": "premium",
+      "annual": true,
+      "discountApplied": "SUMMER20",
+      "referralSource": "friend"
+    }
+    ```
+  </Expandable>
+</ResponseField>
+
+<Note>
+  All events are automatically associated with the current user and session, so you don't need to include user information in your event data.
+</Note>
+
+## Best practices
+
+- **Be consistent with naming**: Use consistent naming conventions for event types and names to make analysis easier.
+
+- **Include useful metadata**: Add relevant context through metadata, but avoid including sensitive information.
+
+- **Track important milestones**: Focus on tracking meaningful interactions rather than every minor action.
+
+- **Use for personalization**: Leverage tracking data to personalize the user experience based on their progress.
