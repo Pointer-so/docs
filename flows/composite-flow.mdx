@@ -165,7 +165,7 @@ const onboardingFlow = {
     // Dashboard tour
     {
       id: "dashboard-tour",
-      type: "standalone",
+      type: "simple",
       name: "Explore the dashboard",
       description: "Learn how to navigate your dashboard",
       page: "/dashboard",
@@ -173,7 +173,7 @@ const onboardingFlow = {
       steps: [
         {
           id: "dashboard-overview",
-          type: "guided",
+          type: "self-paced" // for informational steps; for action steps, use 'guided'
           position: "dashboard-header",
           content: {
             description: "This is your main dashboard where you can see all your projects and activities."
@@ -193,7 +193,7 @@ const onboardingFlow = {
     // Documentation link
     {
       id: "documentation",
-      type: "standalone",
+      type: "simple",
       name: "View docs",
       description: "Check out our documentation.",
       buttonText: "View docs",
