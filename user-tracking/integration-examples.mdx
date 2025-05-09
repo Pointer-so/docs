@@ -41,7 +41,7 @@ export default async function RootLayout({
     <html>
       <body>
         <PointerProvider 
-          apiKey={process.env.NEXT_PUBLIC_POINTER_API_KEY!}
+          projectId={process.env.NEXT_PUBLIC_POINTER_PROJECT_ID!}
           userData={userData}
         >
           {children}
@@ -71,7 +71,7 @@ export default function App({ Component, pageProps }) {
   
   return (
     <PointerProvider 
-      apiKey={process.env.NEXT_PUBLIC_POINTER_API_KEY!}
+      projectId={process.env.NEXT_PUBLIC_POINTER_PROJECT_ID!}
       userData={userData}
     >
       <Component {...pageProps} />
@@ -98,7 +98,7 @@ function App() {
   
   return (
     <PointerProvider 
-      apiKey={process.env.REACT_APP_POINTER_API_KEY!}
+      projectId={process.env.REACT_APP_POINTER_PROJECT_ID!}
       userData={userData}
     >
       <Router>

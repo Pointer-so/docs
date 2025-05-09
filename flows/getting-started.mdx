@@ -81,7 +81,7 @@ We're giving flows their own section because they require additional configurati
     function App() {
     	return (
     		<PointerFlowProvider
-      		 apiKey={process.env.POINTER_API_KEY!}
+      		 projectId={process.env.POINTER_PROJECT_ID!}
              flows={myFlows}
             >
       		  {children}

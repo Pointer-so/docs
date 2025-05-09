@@ -69,7 +69,7 @@ description: "Get started with Pointer in under 5 minutes."
 
     function App() {
       return (
-          <PointerProvider apiKey={process.env.POINTER_API_KEY!}>
+          <PointerProvider projectId={process.env.POINTER_PROJECT_ID!}>
             {children}
           </PointerProvider>
       );
@@ -113,7 +113,7 @@ export default function RootLayout({
   return (
     <html>
       <body>
-        <PointerProvider apiKey={process.env.NEXT_PUBLIC_POINTER_API_KEY!}>
+        <PointerProvider projectId={process.env.NEXT_PUBLIC_POINTER_PROJECT_ID!}>
           {children}
         </PointerProvider>
       </body>
@@ -130,7 +130,7 @@ import type { AppProps } from "next/app";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <PointerProvider apiKey={process.env.NEXT_PUBLIC_POINTER_API_KEY!}>
+    <PointerProvider projectId={process.env.NEXT_PUBLIC_POINTER_PROJECT_ID!}>
       <Component {...pageProps} />
     </PointerProvider>
   );
@@ -146,7 +146,7 @@ export default function App() {
   return (
     <html>
       <body>
-        <PointerProvider apiKey={process.env.POINTER_API_KEY!}>
+        <PointerProvider projectId={process.env.POINTER_PROJECT_ID!}>
           <Outlet />
         </PointerProvider>
       </body>
