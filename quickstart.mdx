@@ -5,98 +5,111 @@ description: "Get started with Pointer in under 5 minutes."
 
 ## Prerequisites
 
-- Node.js 16.0 or later
-
-- A React-based application (React 18+)
+- For React: Node.js 16.0 or later and a React-based application (React 18+)
+- For JavaScript: Any website or web application
 
 ## Installation
 
-<Steps>
-  <Step title="Grab an API key from the Pointer dashboard.">
-    Login to the [Pointer dashboard](https://app.pointer.so), then create a project. Two keys will be automatically generated for you — a production and development key. Copy the development key and store it.
-  </Step>
+<Tabs>
+  <Tab title="React">
+    <Steps>
+      <Step title="Grab the project ID from the Pointer dashboard.">
+        Login to the [Pointer dashboard](https://app.pointer.so), then create a project. Your project ID will be automatically generated for you. Copy this ID and store it.
+        
+        <Note>
+          The Setup section of your project settings in the dashboard will have code snippets with your project ID already filled in for easy copying.
+        </Note>
+      </Step>
 
-  <Step title="Install the Pointer SDK using your preferred package manager.">
-    <CodeGroup>
-      ```bash npm
-      npm install pointer-sdk
-      ```
+      <Step title="Install the Pointer SDK using your preferred package manager.">
+        <CodeGroup>
+          ```bash npm
+          npm install pointer-sdk
+          ```
 
-      ```bash pnpm
-      pnpm add pointer-sdk
-      ```
+          ```bash pnpm
+          pnpm add pointer-sdk
+          ```
 
-      ```bash yarn
-      yarn add pointer-sdk
-      ```
-    </CodeGroup>
+          ```bash yarn
+          yarn add pointer-sdk
+          ```
+        </CodeGroup>
+      </Step>
 
-  </Step>
+      <Step title="Wrap your app with the PointerProvider.">
+        In your root file, (e.g., `layout.tsx`, `index.tsx`, `_app.tsx`) wrap your app with the `PointerProvider`.
 
-  <Step title="Configure your environment variables.">
-    Add the appropriate Pointer API key into your `.env` file.
+        ```typescript
+        import { PointerProvider } from 'pointer-sdk';
 
-    ```bash
-    POINTER_API_KEY=pt_dev_*********************
-    ```
+        function App() {
+          return (
+            <PointerProvider projectId="pt_proj_********-****-****-************">
+              <YourApp />
+            </PointerProvider>
+          );
+        }
+        ```
 
-    <Note>
-      Note that there are two types of API keys: development and production.
-      - **Development keys** (`pt_dev_*`):
-        - For local development only
-        - No origin restrictions
-        - Stricter rate limits
+        <Tip>
+          For optimal performance, place the `PointerProvider` as close as possible to its child components.
+        </Tip>
+      </Step>
 
-      - **Production keys** (`pt_live_*`):
-        - Required for deployed applications
-        - Must specify allowed origin domains
-        - Domains must be valid (e.g., example.com)
+      <Step title="Verify that Pointer is working.">
+        Once you run your app, the Pointer widget should appear in the bottom-right corner. Go to the Setup section in your project settings on the dashboard and click "Check connection" to ensure everything is working correctly.
+      </Step>
 
-      API keys are only shown in full during creation. After that, only the last 4 characters will be visible.
+      <Step title="Go to the Playground to customize your widget.">
+        Head to the Playground in the Pointer dashboard to customize your widget's appearance, content, and behavior.
+      </Step>
+    </Steps>
+  </Tab>
 
-      API keys are public on the client-side. Further authentication occurs in the background to verify each user and prevent session hijacking. For more information, read our [Security page](https://pointer.so/security).
-    </Note>
+  <Tab title="JavaScript">
+    <Steps>
+      <Step title="Grab the project ID from the Pointer dashboard.">
+        Login to the [Pointer dashboard](https://app.pointer.so), then create a project. Your project ID will be automatically generated for you. Copy this ID and store it.
+        
+        <Note>
+          The Setup section of your project settings in the dashboard will have code snippets with your project ID already filled in for easy copying.
+        </Note>
+      </Step>
+      
+      <Step title="Add the Pointer script to your website.">
+        Add the following script tag to your HTML file, ideally right before the closing `</body>` tag:
 
-  </Step>
+        ```html
+        <!-- index.html -->
+        <script src="https://cdn.pointer.so/pointer-sdk@latest/pointer.browser.js?projectId=pt_proj_********-****-****-************"></script>
+        ```
 
-  <Step title="Wrap your app with the PointerProvider.">
-    In your root file, (e.g., `layout.tsx`, `index.tsx`, `_app.tsx`) wrap your app with the `PointerProvider`.
+        Make sure to replace the project ID placeholder with your own project ID from the Pointer dashboard.
+      </Step>
 
-    If you want to set up onboarding flows, see the [Onboarding](https://docs.pointer.so/features/onboarding) section.
+      <Step title="Verify that Pointer is working.">
+        Once you reload your website, the Pointer widget should appear in the bottom-right corner. Go to the Setup section in your project settings on the dashboard and click "Check connection" to ensure everything is working correctly.
+      </Step>
 
-    ```typescript
-    import { PointerProvider } from 'pointer-sdk';
+      <Step title="Go to the Playground to customize your widget.">
+        Head to the Playground in the Pointer dashboard to customize your widget's appearance, content, and behavior.
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
 
-    function App() {
-      return (
-          <PointerProvider projectId={process.env.POINTER_PROJECT_ID!}>
-            {children}
-          </PointerProvider>
-      );
-    }
-    ```
-
-    <Tip>
-      For optimal performance, place the `PointerProvider` as close as possible to its child components.
-    </Tip>
-
-  </Step>
-
-  <Step title="Test the integration.">
-    Once you run your app, Pointer widget should now appear in the bottom-right corner. Head to the [Developers page](https://app.pointer.so/developers) in the dashboard and click "Verify connection" to ensure everything is working correctly.
-  </Step>
-</Steps>
-
-## Styling
-
-You have complete control over the styling of the onboarding flow. For more information, see the [Styling](https://docs.pointer.so/features/styling) section.
-
-## Framework-specific setup
+## Allowed Origins
 
 <Note>
-  Pointer currently works with any React-based application. Support for Vue,
-  Svelte, and other frontend frameworks is in development.
+  For security reasons, you should specify which domains are allowed to use your project ID. Go to your project settings in the Pointer dashboard, find the General tab, and add your domains to the Allowed Origins section. This prevents unauthorized websites from using your project ID.
 </Note>
+
+## Styling and Customization
+
+All styling and customization is now done through the Playground in the Pointer dashboard. This visual editor provides a more user-friendly interface for customizing your widget's appearance, content, and behavior.
+
+## Framework-specific setup for React
 
 ### Next.js
 
@@ -113,7 +126,7 @@ export default function RootLayout({
   return (
     <html>
       <body>
-        <PointerProvider projectId={process.env.NEXT_PUBLIC_POINTER_PROJECT_ID!}>
+        <PointerProvider projectId="pt_proj_********-****-****-************">
           {children}
         </PointerProvider>
       </body>
@@ -130,7 +143,7 @@ import type { AppProps } from "next/app";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <PointerProvider projectId={process.env.NEXT_PUBLIC_POINTER_PROJECT_ID!}>
+    <PointerProvider projectId="pt_proj_********-****-****-************">
       <Component {...pageProps} />
     </PointerProvider>
   );
@@ -146,7 +159,7 @@ export default function App() {
   return (
     <html>
       <body>
-        <PointerProvider projectId={process.env.POINTER_PROJECT_ID!}>
+        <PointerProvider projectId="pt_proj_********-****-****-************">
           <Outlet />
         </PointerProvider>
       </body>
