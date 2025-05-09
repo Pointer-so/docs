@@ -30,7 +30,7 @@ We're giving flows their own section because they require additional configurati
 ## Getting started
 
 <Steps>
-  <Step title="Grab an API key from the Pointer dashboard.">
+  <Step title="Grab your project ID from the Pointer dashboard.">
     Login to the [Pointer dashboard](https://app.pointer.so), then create a project. Two keys will be automatically generated for you — a production and development key. Copy the development key and store it.
   </Step>
   <Step title="Install the Pointer SDK using your preferred package manager.">
@@ -53,24 +53,12 @@ We're giving flows their own section because they require additional configurati
     </CodeGroup>
   </Step>
   <Step title="Configure your environment variables.">
-    Add the appropriate Pointer API key into your `.env` file.
+    Add your Pointer project ID into your `.env` file.
 
     ```bash
-    POINTER_API_KEY=pt_dev_*********************
+    POINTER_PROJECT_ID=pt_proj_*********************
     ```
 
-    <Note>
-      Note that there are two types of API keys: development and production.
-
-      - **Development keys** (`pt_dev_*`):
-        - For local development only
-        - No origin restrictions
-        - Stricter rate limits
-      - **Production keys** (`pt_live_*`):
-        - Required for deployed applications
-        - Must specify allowed origin domains
-        - Domains must be valid (e.g., example.com)
-    </Note>
   </Step>
   <Step title="Configure the provider">
     Add the `PointerFlowProvider` to wrap your app, typically in a layout file that contains your authenticated routes:
